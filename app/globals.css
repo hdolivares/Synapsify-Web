@@ -1,0 +1,123 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Beautiful Dark Mode Base Colors - Navy/Indigo Theme */
+  --background: #0a0f1e; /* Deep navy blue - warmer than pure black */
+  --background-secondary: #0f1626; /* Slightly lighter navy */
+  --background-tertiary: #1a2332; /* Card/section backgrounds */
+  --background-elevated: #242b3d; /* Elevated surfaces */
+  
+  /* Foreground Colors - Warmer whites with subtle blue tint */
+  --foreground: #e8f0f7; /* Soft white with blue tint */
+  --foreground-secondary: #b8c5d6; /* Muted text */
+  --foreground-muted: #8b9cb0; /* Subtle text */
+  
+  /* Synapsify Brand Colors - Cyan to Purple Gradient Palette */
+  --cyan-bright: #4eebff;
+  --cyan-light: #a1eaff;
+  --blue-vibrant: #00aaff;
+  --purple-rich: #8a2be2;
+  --magenta-deep: #c700ff;
+  
+  /* Accent Background Variations */
+  --cyan-bg-subtle: rgba(78, 235, 255, 0.08);
+  --blue-bg-subtle: rgba(0, 170, 255, 0.08);
+  --purple-bg-subtle: rgba(138, 43, 226, 0.08);
+}
+
+body {
+  color: var(--foreground);
+  background: linear-gradient(180deg, var(--background) 0%, var(--background-secondary) 100%);
+  background-attachment: fixed;
+  font-family: var(--font-inter), system-ui, -apple-system, sans-serif;
+  min-height: 100vh;
+}
+
+/* Modern font classes */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-space-grotesk), system-ui, -apple-system, sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+/* Hide default cursor on desktop for custom cursor */
+@media (min-width: 768px) {
+  body {
+    cursor: none;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  
+  /* Gradient text utilities */
+  .gradient-text-cyan {
+    @apply text-transparent bg-clip-text bg-gradient-to-r from-[#4eebff] to-[#00aaff];
+  }
+  
+  .gradient-text-purple {
+    @apply text-transparent bg-clip-text bg-gradient-to-r from-[#00aaff] to-[#8a2be2];
+  }
+  
+  .gradient-text-full {
+    @apply text-transparent bg-clip-text bg-gradient-to-r from-[#4eebff] via-[#00aaff] to-[#8a2be2];
+  }
+  
+  /* Gradient button utilities */
+  .gradient-button-primary {
+    @apply bg-gradient-to-r from-[#4eebff] to-[#00aaff] text-white font-semibold;
+  }
+  
+  .gradient-button-secondary {
+    @apply bg-gradient-to-r from-[#00aaff] to-[#8a2be2] text-white font-semibold;
+  }
+  
+  /* Gradient border utilities */
+  .gradient-border-cyan {
+    border-image: linear-gradient(to right, #4eebff, #00aaff) 1;
+  }
+
+  .gradient-border-purple {
+    border-image: linear-gradient(to right, #00aaff, #8a2be2) 1;
+  }
+
+  /* Range slider styles */
+  .range-slider::-webkit-slider-thumb {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #4eebff;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(78, 235, 255, 0.5), 0 0 20px rgba(78, 235, 255, 0.3);
+    transition: all 0.2s ease;
+  }
+
+  .range-slider::-webkit-slider-thumb:hover {
+    background: #00aaff;
+    box-shadow: 0 0 15px rgba(78, 235, 255, 0.7), 0 0 30px rgba(78, 235, 255, 0.5);
+    transform: scale(1.2);
+  }
+
+  .range-slider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #4eebff;
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 0 10px rgba(78, 235, 255, 0.5), 0 0 20px rgba(78, 235, 255, 0.3);
+    transition: all 0.2s ease;
+  }
+
+  .range-slider::-moz-range-thumb:hover {
+    background: #00aaff;
+    box-shadow: 0 0 15px rgba(78, 235, 255, 0.7), 0 0 30px rgba(78, 235, 255, 0.5);
+    transform: scale(1.2);
+  }
+}
+
