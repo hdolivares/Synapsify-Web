@@ -42,6 +42,7 @@ export default function Problem() {
     <section
       ref={ref}
       className="pt-20 pb-40 px-4 sm:px-6 lg:px-8 relative overflow-hidden"
+      style={{ position: 'relative' }}
     >
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">

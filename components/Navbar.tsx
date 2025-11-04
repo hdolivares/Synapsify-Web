@@ -1,10 +1,13 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import { useState } from 'react'
 import Image from 'next/image'
 import MagneticButton from './MagneticButton'
+import WaitlistModal from './WaitlistModal'
 
 export default function Navbar() {
+  const [isModalOpen, setIsModalOpen] = useState(false)
   return (
     <motion.nav
       initial={{ y: -100, opacity: 0 }}
@@ -31,12 +34,14 @@ export default function Navbar() {
           </motion.div>
           <MagneticButton
             magneticStrength={0.3}
+            onClick={() => setIsModalOpen(true)}
             className="px-6 py-2 gradient-button-primary rounded-full hover:opacity-90 transition-all shadow-lg shadow-[#4eebff]/20"
           >
             Join Waitlist
           </MagneticButton>
         </div>
       </div>
+      <WaitlistModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </motion.nav>
   )
 }

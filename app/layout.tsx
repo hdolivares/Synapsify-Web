@@ -20,6 +20,9 @@ const spaceGrotesk = Space_Grotesk({
 export const metadata: Metadata = {
   title: 'Synapsify - Build in Unreal Engine. Faster. Smarter.',
   description: 'Synapsify is an AI co-developer that lives in your editor. It generates bug-free Blueprints and production-ready C++ from plain English.',
+  icons: {
+    icon: '/Synapsify Logo 512.png',
+  },
 }
 
 export default function RootLayout({

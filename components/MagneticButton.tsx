@@ -7,12 +7,14 @@ interface MagneticButtonProps {
   children: React.ReactNode
   className?: string
   magneticStrength?: number
+  onClick?: () => void
 }
 
 export default function MagneticButton({
   children,
   className = '',
   magneticStrength = 0.3,
+  onClick,
 }: MagneticButtonProps) {
   const ref = useRef<HTMLButtonElement>(null)
   const [isHovered, setIsHovered] = useState(false)
@@ -51,6 +53,7 @@ export default function MagneticButton({
     <motion.button
       ref={ref}
       className={className}
+      onClick={onClick}
       onMouseMove={handleMouseMove}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={handleMouseLeave}

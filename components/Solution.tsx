@@ -18,6 +18,7 @@ export default function Solution() {
     <section
       ref={ref}
       className="py-20 px-4 sm:px-6 lg:px-8 bg-[#0f1626]/50 relative overflow-hidden"
+      style={{ position: 'relative' }}
     >
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -116,6 +117,7 @@ export default function Solution() {
                 src="/Problem.jpg"
                 alt="Spaghetti Code - Dev Frustration"
                 fill
+                sizes="(max-width: 768px) 100vw, 50vw"
                 className="object-cover"
                 quality={90}
               />
@@ -149,6 +151,7 @@ export default function Solution() {
                 src="/Solution.jpg"
                 alt="Clean Code - Dev Satisfaction"
                 fill
+                sizes="(max-width: 768px) 100vw, 50vw"
                 className="object-cover"
                 quality={90}
               />

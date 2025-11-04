@@ -125,7 +125,7 @@ export default function Features() {
   return (
     <motion.section
       ref={ref}
-      style={{ opacity }}
+      style={{ opacity, position: 'relative' }}
       className="pt-20 pb-48 px-4 sm:px-6 lg:px-8 relative"
     >
       <motion.div

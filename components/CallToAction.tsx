@@ -1,10 +1,13 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import { useState } from 'react'
 import MagneticButton from './MagneticButton'
+import WaitlistModal from './WaitlistModal'
 import AnimatedGradient from './AnimatedGradient'
 
 export default function CallToAction() {
+  const [isModalOpen, setIsModalOpen] = useState(false)
   return (
     <section className="relative py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-[#0a0f1e] via-[#0f1626] to-[#0a0f1e] overflow-hidden">
       <AnimatedGradient />
@@ -36,6 +39,7 @@ export default function CallToAction() {
         >
           <MagneticButton
             magneticStrength={0.4}
+            onClick={() => setIsModalOpen(true)}
             className="px-10 py-5 gradient-button-primary rounded-full text-lg hover:opacity-90 transition-all shadow-2xl shadow-[#4eebff]/30 relative overflow-hidden"
           >
             <span className="relative z-10">Join the Waitlist</span>
@@ -48,6 +52,7 @@ export default function CallToAction() {
           </MagneticButton>
         </motion.div>
       </div>
+      <WaitlistModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </section>
   )
 }

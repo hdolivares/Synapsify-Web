@@ -4,12 +4,16 @@ import { motion } from 'framer-motion'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import MagneticButton from './MagneticButton'
+import WaitlistModal from './WaitlistModal'
 
 // Spark particle component with gradient colors
 function SparkParticle({ delay, index }: { delay: number; index: number }) {
+  // Use index-based seed for consistent initial position (prevents hydration mismatch)
+  const seed = index * 0.618 // Golden ratio for better distribution
+  const [mounted, setMounted] = useState(false)
   const [position, setPosition] = useState({
-    x: Math.random() * 100,
-    y: Math.random() * 100,
+    x: (seed * 100) % 100,
+    y: ((seed * 137) % 100),
   })
 
   // Define the two gradient options
@@ -28,15 +32,19 @@ function SparkParticle({ delay, index }: { delay: number; index: number }) {
   const gradient = gradients[index % 2]
 
   useEffect(() => {
+    setMounted(true)
     const interval = setInterval(() => {
       setPosition({
         x: Math.random() * 100,
         y: Math.random() * 100,
       })
-    }, 3000 + Math.random() * 2000)
+    }, 3000 + (index % 5) * 400) // More predictable timing
 
     return () => clearInterval(interval)
-  }, [])
+  }, [index])
+
+  // Only render after mount to prevent hydration mismatch
+  if (!mounted) return null
 
   return (
     <motion.div
@@ -51,11 +59,11 @@ function SparkParticle({ delay, index }: { delay: number; index: number }) {
       animate={{
         opacity: [0, 1, 0.8, 0],
         scale: [0, 1.2, 1, 0],
-        x: [0, (Math.random() - 0.5) * 30],
-        y: [0, (Math.random() - 0.5) * 30],
+        x: [0, ((index % 3) - 1) * 15], // Deterministic movement
+        y: [0, ((index % 5) - 2) * 12],
       }}
       transition={{
-        duration: 2 + Math.random() * 2,
+        duration: 2 + (index % 3),
         delay: delay,
         repeat: Infinity,
         ease: 'easeInOut',
@@ -90,8 +98,9 @@ function GlowingOrb({ delay, size, color }: { delay: number; size: number; color
 }
 
 export default function Hero() {
-  // Generate spark particles
-  const sparks = Array.from({ length: 30 }, (_, i) => i)
+  // Generate spark particles - reduced from 30 to 15 for better performance
+  const sparks = Array.from({ length: 15 }, (_, i) => i)
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   return (
     <section className="relative min-h-[80vh] flex items-center justify-center px-4 sm:px-6 lg:px-8 pt-16 overflow-hidden">
@@ -167,6 +176,7 @@ export default function Hero() {
         >
           <MagneticButton
             magneticStrength={0.4}
+            onClick={() => setIsModalOpen(true)}
             className="px-8 py-4 gradient-button-primary rounded-full text-lg hover:opacity-90 transition-all shadow-2xl shadow-[#4eebff]/30 relative overflow-hidden"
           >
             <span className="relative z-10">Join the Waitlist</span>
@@ -179,6 +189,7 @@ export default function Hero() {
           </MagneticButton>
         </motion.div>
       </div>
+      <WaitlistModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </section>
   )
 }
