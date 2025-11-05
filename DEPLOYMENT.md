@@ -12,7 +12,7 @@ This guide will help you deploy the Synapsify-Web application to your server.
 
 ```bash
 ssh root@104.237.6.152
-# Password: NimbedGrangeIcicleSixain
+# Use your server password or SSH key
 ```
 
 ## Step 2: Set Up Git
