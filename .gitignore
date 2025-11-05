@@ -34,3 +34,16 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# secrets and credentials - DO NOT COMMIT
+*.tlp
+synapsify.tlp
+*.env
+.env
+.env.local
+.env.production
+credentials.txt
+*.key
+*.pem
+*.p12
+*.pfx
+
