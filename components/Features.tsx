@@ -126,8 +126,32 @@ export default function Features() {
     <motion.section
       ref={ref}
       style={{ opacity, position: 'relative' }}
-      className="pt-20 pb-48 px-4 sm:px-6 lg:px-8 relative"
+      className="pt-20 pb-48 px-4 sm:px-6 lg:px-8 relative overflow-hidden"
     >
+      {/* Subtle mesh gradient background */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-15">
+        <div
+          className="absolute inset-0"
+          style={{
+            background: `
+              radial-gradient(at 10% 20%, rgba(78, 235, 255, 0.08) 0px, transparent 50%),
+              radial-gradient(at 90% 80%, rgba(138, 43, 226, 0.08) 0px, transparent 50%),
+              radial-gradient(at 50% 40%, rgba(0, 170, 255, 0.06) 0px, transparent 50%)
+            `,
+          }}
+        />
+      </div>
+
+      {/* Subtle dot pattern */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-4">
+        <div
+          className="w-full h-full"
+          style={{
+            backgroundImage: `radial-gradient(circle, rgba(78, 235, 255, 0.2) 1px, transparent 1px)`,
+            backgroundSize: '25px 25px',
+          }}
+        />
+      </div>
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         whileInView={{ opacity: 1, scale: 1 }}
@@ -147,8 +171,19 @@ export default function Features() {
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.2 }}
             className="text-4xl sm:text-5xl font-bold gradient-text-full mb-6"
+            animate={{
+              textShadow: [
+                '0 0 20px rgba(78, 235, 255, 0.3), 0 0 20px rgba(138, 43, 226, 0.3)',
+                '0 0 30px rgba(78, 235, 255, 0.5), 0 0 30px rgba(138, 43, 226, 0.5)',
+                '0 0 20px rgba(78, 235, 255, 0.3), 0 0 20px rgba(138, 43, 226, 0.3)',
+              ],
+            }}
+            transition={{
+              opacity: { duration: 0.8, delay: 0.2 },
+              y: { duration: 0.8, delay: 0.2 },
+              textShadow: { duration: 3, repeat: Infinity, ease: 'easeInOut' },
+            }}
           >
             Powerful Features
           </motion.h2>

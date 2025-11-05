@@ -102,35 +102,92 @@ function GlowingOrb({ delay, size, color, x, y, index }: { delay: number; size: 
   )
 }
 
-// Floating geometric shape component
-function FloatingShape({ delay, shape, size, x, y, colorIndex }: { delay: number; shape: 'circle' | 'square' | 'triangle'; size: number; x: string; y: string; colorIndex: number }) {
-  const colors = ['rgba(78, 235, 255, 0.1)', 'rgba(0, 170, 255, 0.1)', 'rgba(138, 43, 226, 0.1)', 'rgba(255, 140, 63, 0.1)']
+// Floating game-related element component
+function FloatingGameElement({ delay, elementType, size, x, y, colorIndex }: { delay: number; elementType: 'bracket' | 'controller' | 'block' | 'coin' | 'node' | 'code' | 'sword' | 'invader'; size: number; x: string; y: string; colorIndex: number }) {
+  const colors = ['rgba(78, 235, 255, 0.15)', 'rgba(0, 170, 255, 0.15)', 'rgba(138, 43, 226, 0.15)', 'rgba(255, 140, 63, 0.15)']
   const color = colors[colorIndex % colors.length]
 
-  const renderShape = () => {
-    switch (shape) {
-      case 'circle':
-        return <div className="w-full h-full rounded-full border border-[#4eebff]/20" style={{ background: color }} />
-      case 'square':
+  const renderElement = () => {
+    switch (elementType) {
+      case 'bracket':
+        // Code brackets {}
+        return (
+          <div className="w-full h-full flex items-center justify-center" style={{ color: '#4eebff', fontSize: size * 0.8 }}>
+            <span className="font-bold">{'{'}</span>
+            <span className="font-bold ml-1">{'}'}</span>
+          </div>
+        )
+      case 'controller':
+        // Game controller emoji
+        return (
+          <div className="w-full h-full flex items-center justify-center" style={{ fontSize: size * 0.7 }}>
+            🎮
+          </div>
+        )
+      case 'block':
+        // Game block/platform
         return (
           <div
-            className="w-full h-full border border-[#4eebff]/20"
+            className="w-full h-full border-2 border-[#4eebff]/30"
             style={{
-              background: color,
-              transform: 'rotate(45deg)',
-              clipPath: 'polygon(20% 0%, 80% 0%, 100% 20%, 100% 80%, 80% 100%, 20% 100%, 0% 80%, 0% 20%)',
+              background: `linear-gradient(135deg, ${color}, transparent)`,
+              clipPath: 'polygon(0% 0%, 100% 0%, 95% 100%, 5% 100%)',
             }}
           />
         )
-      case 'triangle':
+      case 'coin':
+        // Game coin
         return (
-          <div
-            className="w-full h-full border border-[#4eebff]/20"
-            style={{
-              background: color,
-              clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)',
-            }}
-          />
+          <div className="w-full h-full relative">
+            <div
+              className="absolute inset-0 rounded-full border-2 border-[#ff8c3f]/40"
+              style={{
+                background: `radial-gradient(circle at 30% 30%, rgba(255, 140, 63, 0.3), ${color})`,
+              }}
+            />
+            <div className="absolute inset-0 flex items-center justify-center" style={{ fontSize: size * 0.3 }}>
+              $
+            </div>
+          </div>
+        )
+      case 'node':
+        // Blueprint node (circular with connection points)
+        return (
+          <div className="w-full h-full relative">
+            <div
+              className="absolute inset-0 rounded-full border-2 border-[#4eebff]/40"
+              style={{ background: color }}
+            />
+            {/* Connection points */}
+            <div className="absolute top-0 left-1/2 w-2 h-2 bg-[#4eebff]/60 rounded-full transform -translate-x-1/2 -translate-y-1/2" />
+            <div className="absolute bottom-0 left-1/2 w-2 h-2 bg-[#4eebff]/60 rounded-full transform -translate-x-1/2 translate-y-1/2" />
+            <div className="absolute left-0 top-1/2 w-2 h-2 bg-[#4eebff]/60 rounded-full transform -translate-y-1/2 -translate-x-1/2" />
+            <div className="absolute right-0 top-1/2 w-2 h-2 bg-[#4eebff]/60 rounded-full transform -translate-y-1/2 translate-x-1/2" />
+          </div>
+        )
+      case 'code':
+        // Code angle brackets <>
+        return (
+          <div className="w-full h-full flex items-center justify-center" style={{ color: '#4eebff', fontSize: size * 0.8 }}>
+            <span className="font-bold">{'<'}</span>
+            <span className="font-bold ml-1">{'>'}</span>
+          </div>
+        )
+      case 'sword':
+        // Sword icon
+        return (
+          <div className="w-full h-full flex items-center justify-center" style={{ fontSize: size * 0.7 }}>
+            ⚔️
+          </div>
+        )
+      case 'invader':
+        // Space invader (8-bit style)
+        return (
+          <div className="w-full h-full relative" style={{ fontSize: size * 0.6 }}>
+            <div className="absolute inset-0 flex items-center justify-center" style={{ color: '#4eebff' }}>
+              👾
+            </div>
+          </div>
         )
     }
   }
@@ -146,8 +203,8 @@ function FloatingShape({ delay, shape, size, x, y, colorIndex }: { delay: number
       }}
       initial={{ opacity: 0, scale: 0 }}
       animate={{
-        opacity: [0.3, 0.6, 0.3],
-        scale: [1, 1.2, 1],
+        opacity: [0.4, 0.7, 0.4],
+        scale: [1, 1.15, 1],
         rotate: [0, 180, 360],
         y: [0, -30, 0],
         x: [0, 20, 0],
@@ -159,7 +216,7 @@ function FloatingShape({ delay, shape, size, x, y, colorIndex }: { delay: number
         ease: 'easeInOut',
       }}
     >
-      {renderShape()}
+      {renderElement()}
     </motion.div>
   )
 }
@@ -216,10 +273,10 @@ export default function Hero() {
   const sparks = Array.from({ length: 15 }, (_, i) => i)
   const [isModalOpen, setIsModalOpen] = useState(false)
 
-  // Generate floating shapes
-  const shapes = Array.from({ length: 8 }, (_, i) => ({
+  // Generate floating game elements
+  const gameElements = Array.from({ length: 8 }, (_, i) => ({
     id: i,
-    shape: ['circle', 'square', 'triangle'][i % 3] as 'circle' | 'square' | 'triangle',
+    elementType: ['bracket', 'controller', 'sword', 'coin', 'node', 'code', 'bracket', 'invader'][i % 8] as 'bracket' | 'controller' | 'coin' | 'node' | 'code' | 'sword' | 'invader',
     size: 60 + (i % 4) * 30,
     x: `${(i * 137.5) % 100}%`,
     y: `${(i * 73) % 100}%`,
@@ -249,17 +306,17 @@ export default function Hero() {
         <GlowingOrb delay={10} size={450} color="rgba(138, 43, 226, 0.25)" x="50%" y="80%" index={2} />
       </div>
 
-      {/* Floating Geometric Shapes */}
+      {/* Floating Game Elements */}
       <div className="absolute inset-0 z-[4] pointer-events-none">
-        {shapes.map((shape) => (
-          <FloatingShape
-            key={shape.id}
-            delay={shape.delay}
-            shape={shape.shape}
-            size={shape.size}
-            x={shape.x}
-            y={shape.y}
-            colorIndex={shape.colorIndex}
+        {gameElements.map((element) => (
+          <FloatingGameElement
+            key={element.id}
+            delay={element.delay}
+            elementType={element.elementType}
+            size={element.size}
+            x={element.x}
+            y={element.y}
+            colorIndex={element.colorIndex}
           />
         ))}
       </div>

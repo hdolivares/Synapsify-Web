@@ -44,6 +44,31 @@ export default function Problem() {
       className="pt-20 pb-40 px-4 sm:px-6 lg:px-8 relative overflow-hidden"
       style={{ position: 'relative' }}
     >
+      {/* Subtle mesh gradient background */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-20">
+        <div
+          className="absolute inset-0"
+          style={{
+            background: `
+              radial-gradient(at 20% 30%, rgba(78, 235, 255, 0.1) 0px, transparent 50%),
+              radial-gradient(at 80% 70%, rgba(138, 43, 226, 0.1) 0px, transparent 50%),
+              radial-gradient(at 40% 80%, rgba(0, 170, 255, 0.08) 0px, transparent 50%)
+            `,
+          }}
+        />
+      </div>
+
+      {/* Subtle dot pattern overlay */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-5">
+        <div
+          className="w-full h-full"
+          style={{
+            backgroundImage: `radial-gradient(circle, rgba(78, 235, 255, 0.3) 1px, transparent 1px)`,
+            backgroundSize: '30px 30px',
+          }}
+        />
+      </div>
+
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <motion.div
@@ -86,8 +111,19 @@ export default function Problem() {
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.3 }}
           className="text-4xl sm:text-5xl font-bold gradient-text-cyan mb-6 text-center"
+          animate={{
+            textShadow: [
+              '0 0 20px rgba(78, 235, 255, 0.3)',
+              '0 0 30px rgba(78, 235, 255, 0.5)',
+              '0 0 20px rgba(78, 235, 255, 0.3)',
+            ],
+          }}
+          transition={{
+            opacity: { duration: 0.8, delay: 0.3 },
+            y: { duration: 0.8, delay: 0.3 },
+            textShadow: { duration: 3, repeat: Infinity, ease: 'easeInOut' },
+          }}
         >
           The "Unreal Wall"
         </motion.h2>
@@ -110,8 +146,28 @@ export default function Problem() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8, delay: 0.6 }}
-          className="grid grid-cols-3 gap-8 mt-12 pt-8 border-t border-[#4eebff]/20"
+          className="grid grid-cols-3 gap-8 mt-12 pt-8 relative"
         >
+          {/* Animated gradient divider */}
+          <motion.div
+            className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#4eebff]/50 to-transparent"
+            initial={{ scaleX: 0 }}
+            whileInView={{ scaleX: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1, delay: 0.7 }}
+          />
+          <motion.div
+            className="absolute top-0 h-px bg-[#4eebff]"
+            style={{ width: '60%', left: '20%' }}
+            animate={{
+              boxShadow: [
+                '0 0 10px rgba(78, 235, 255, 0.5)',
+                '0 0 20px rgba(78, 235, 255, 0.8)',
+                '0 0 10px rgba(78, 235, 255, 0.5)',
+              ],
+            }}
+            transition={{ duration: 2, repeat: Infinity }}
+          />
           <ProblemStat value="70%" label="Time on Boilerplate" delay={0.7} />
           <ProblemStat value="50+ hrs" label="Learning Curve" delay={0.8} />
           <ProblemStat value="∞" label="Forum Searches" delay={0.9} />

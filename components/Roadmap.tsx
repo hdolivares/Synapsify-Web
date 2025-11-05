@@ -18,6 +18,32 @@ export default function Roadmap() {
       ref={ref}
       className="pt-20 pb-32 px-4 sm:px-6 lg:px-8 relative overflow-hidden"
     >
+      {/* Subtle mesh gradient background */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-15">
+        <div
+          className="absolute inset-0"
+          style={{
+            background: `
+              radial-gradient(at 25% 25%, rgba(78, 235, 255, 0.08) 0px, transparent 50%),
+              radial-gradient(at 75% 75%, rgba(138, 43, 226, 0.08) 0px, transparent 50%)
+            `,
+          }}
+        />
+      </div>
+
+      {/* Subtle grid pattern */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-4">
+        <div
+          className="w-full h-full"
+          style={{
+            backgroundImage: `
+              linear-gradient(rgba(78, 235, 255, 0.08) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(78, 235, 255, 0.08) 1px, transparent 1px)
+            `,
+            backgroundSize: '35px 35px',
+          }}
+        />
+      </div>
       <motion.div
         style={{ y, opacity }}
         initial={{ opacity: 0, y: 50 }}
@@ -30,8 +56,19 @@ export default function Roadmap() {
           initial={{ opacity: 0, x: -100 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.2 }}
           className="text-4xl sm:text-5xl font-bold gradient-text-cyan text-center mb-4"
+          animate={{
+            textShadow: [
+              '0 0 20px rgba(78, 235, 255, 0.3)',
+              '0 0 30px rgba(78, 235, 255, 0.5)',
+              '0 0 20px rgba(78, 235, 255, 0.3)',
+            ],
+          }}
+          transition={{
+            opacity: { duration: 0.8, delay: 0.2 },
+            x: { duration: 0.8, delay: 0.2 },
+            textShadow: { duration: 3, repeat: Infinity, ease: 'easeInOut' },
+          }}
         >
           We're Already Building
         </motion.h2>

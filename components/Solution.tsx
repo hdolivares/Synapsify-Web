@@ -20,6 +20,34 @@ export default function Solution() {
       className="py-20 px-4 sm:px-6 lg:px-8 bg-[#0f1626]/50 relative overflow-hidden"
       style={{ position: 'relative' }}
     >
+      {/* Subtle mesh gradient background */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-15">
+        <div
+          className="absolute inset-0"
+          style={{
+            background: `
+              radial-gradient(at 30% 20%, rgba(0, 170, 255, 0.08) 0px, transparent 50%),
+              radial-gradient(at 70% 80%, rgba(138, 43, 226, 0.08) 0px, transparent 50%),
+              radial-gradient(at 50% 50%, rgba(78, 235, 255, 0.06) 0px, transparent 50%)
+            `,
+          }}
+        />
+      </div>
+
+      {/* Subtle grid pattern */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-5">
+        <div
+          className="w-full h-full"
+          style={{
+            backgroundImage: `
+              linear-gradient(rgba(78, 235, 255, 0.1) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(78, 235, 255, 0.1) 1px, transparent 1px)
+            `,
+            backgroundSize: '40px 40px',
+          }}
+        />
+      </div>
+
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <motion.div
@@ -48,8 +76,19 @@ export default function Solution() {
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.2 }}
             className="text-4xl sm:text-5xl font-bold gradient-text-purple mb-6"
+            animate={{
+              textShadow: [
+                '0 0 20px rgba(138, 43, 226, 0.3)',
+                '0 0 30px rgba(138, 43, 226, 0.5)',
+                '0 0 20px rgba(138, 43, 226, 0.3)',
+              ],
+            }}
+            transition={{
+              opacity: { duration: 0.8, delay: 0.2 },
+              y: { duration: 0.8, delay: 0.2 },
+              textShadow: { duration: 3, repeat: Infinity, ease: 'easeInOut' },
+            }}
           >
             Your AI Development Lead
           </motion.h2>
