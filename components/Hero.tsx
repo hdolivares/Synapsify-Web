@@ -1,7 +1,6 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import MagneticButton from './MagneticButton'
 import WaitlistModal from './WaitlistModal'
@@ -73,7 +72,11 @@ function SparkParticle({ delay, index }: { delay: number; index: number }) {
 }
 
 // Glowing orb component for subtle background effects
-function GlowingOrb({ delay, size, color }: { delay: number; size: number; color: string }) {
+function GlowingOrb({ delay, size, color, x, y, index }: { delay: number; size: number; color: string; x: string; y: string; index: number }) {
+  // Use index-based seed for deterministic duration (prevents hydration mismatch)
+  const durationSeed = index * 0.618 // Golden ratio for better distribution
+  const duration = 20 + (durationSeed % 10) // Deterministic duration between 20-30
+  
   return (
     <motion.div
       className="absolute rounded-full blur-3xl opacity-30"
@@ -81,6 +84,8 @@ function GlowingOrb({ delay, size, color }: { delay: number; size: number; color
         width: size,
         height: size,
         background: color,
+        left: x,
+        top: y,
       }}
       animate={{
         x: [0, 100, -100, 0],
@@ -88,7 +93,7 @@ function GlowingOrb({ delay, size, color }: { delay: number; size: number; color
         scale: [1, 1.2, 0.8, 1],
       }}
       transition={{
-        duration: 20 + Math.random() * 10,
+        duration: duration,
         delay: delay,
         repeat: Infinity,
         ease: 'easeInOut',
@@ -97,45 +102,170 @@ function GlowingOrb({ delay, size, color }: { delay: number; size: number; color
   )
 }
 
+// Floating geometric shape component
+function FloatingShape({ delay, shape, size, x, y, colorIndex }: { delay: number; shape: 'circle' | 'square' | 'triangle'; size: number; x: string; y: string; colorIndex: number }) {
+  const colors = ['rgba(78, 235, 255, 0.1)', 'rgba(0, 170, 255, 0.1)', 'rgba(138, 43, 226, 0.1)', 'rgba(255, 140, 63, 0.1)']
+  const color = colors[colorIndex % colors.length]
+
+  const renderShape = () => {
+    switch (shape) {
+      case 'circle':
+        return <div className="w-full h-full rounded-full border border-[#4eebff]/20" style={{ background: color }} />
+      case 'square':
+        return (
+          <div
+            className="w-full h-full border border-[#4eebff]/20"
+            style={{
+              background: color,
+              transform: 'rotate(45deg)',
+              clipPath: 'polygon(20% 0%, 80% 0%, 100% 20%, 100% 80%, 80% 100%, 20% 100%, 0% 80%, 0% 20%)',
+            }}
+          />
+        )
+      case 'triangle':
+        return (
+          <div
+            className="w-full h-full border border-[#4eebff]/20"
+            style={{
+              background: color,
+              clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)',
+            }}
+          />
+        )
+    }
+  }
+
+  return (
+    <motion.div
+      className="absolute"
+      style={{
+        width: size,
+        height: size,
+        left: x,
+        top: y,
+      }}
+      initial={{ opacity: 0, scale: 0 }}
+      animate={{
+        opacity: [0.3, 0.6, 0.3],
+        scale: [1, 1.2, 1],
+        rotate: [0, 180, 360],
+        y: [0, -30, 0],
+        x: [0, 20, 0],
+      }}
+      transition={{
+        duration: 10 + delay * 2,
+        delay: delay,
+        repeat: Infinity,
+        ease: 'easeInOut',
+      }}
+    >
+      {renderShape()}
+    </motion.div>
+  )
+}
+
+// Animated mesh gradient background
+function MeshGradient() {
+  return (
+    <div className="absolute inset-0 overflow-hidden">
+      <motion.div
+        className="absolute inset-0 opacity-40"
+        style={{
+          background: `
+            radial-gradient(at 0% 0%, rgba(78, 235, 255, 0.3) 0px, transparent 50%),
+            radial-gradient(at 100% 0%, rgba(138, 43, 226, 0.3) 0px, transparent 50%),
+            radial-gradient(at 100% 100%, rgba(0, 170, 255, 0.3) 0px, transparent 50%),
+            radial-gradient(at 0% 100%, rgba(255, 140, 63, 0.2) 0px, transparent 50%)
+          `,
+        }}
+        animate={{
+          x: [0, 50, -50, 0],
+          y: [0, 30, -30, 0],
+          scale: [1, 1.1, 0.9, 1],
+        }}
+        transition={{
+          duration: 20,
+          repeat: Infinity,
+          ease: 'easeInOut',
+        }}
+      />
+    </div>
+  )
+}
+
+// Code-inspired grid pattern
+function CodeGrid() {
+  return (
+    <div className="absolute inset-0 opacity-10">
+      <div
+        className="w-full h-full"
+        style={{
+          backgroundImage: `
+            linear-gradient(rgba(78, 235, 255, 0.1) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(78, 235, 255, 0.1) 1px, transparent 1px)
+          `,
+          backgroundSize: '50px 50px',
+        }}
+      />
+    </div>
+  )
+}
+
 export default function Hero() {
   // Generate spark particles - reduced from 30 to 15 for better performance
   const sparks = Array.from({ length: 15 }, (_, i) => i)
   const [isModalOpen, setIsModalOpen] = useState(false)
 
+  // Generate floating shapes
+  const shapes = Array.from({ length: 8 }, (_, i) => ({
+    id: i,
+    shape: ['circle', 'square', 'triangle'][i % 3] as 'circle' | 'square' | 'triangle',
+    size: 60 + (i % 4) * 30,
+    x: `${(i * 137.5) % 100}%`,
+    y: `${(i * 73) % 100}%`,
+    delay: i * 0.5,
+    colorIndex: i,
+  }))
+
   return (
-    <section className="relative min-h-[80vh] flex items-center justify-center px-4 sm:px-6 lg:px-8 pt-16 overflow-hidden">
-      {/* Background Image */}
-      <motion.div
-        initial={{ opacity: 0, scale: 1.1 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 1 }}
-        className="absolute inset-0 z-0"
-      >
-        <div className="relative w-full h-full">
-          <Image
-            src="/hero-image.jpg"
-            alt="AI Neural Network - Synapsify"
-            fill
-            className="object-cover blur-sm"
-            priority
-            quality={90}
-            style={{ objectPosition: 'center' }}
-          />
-          {/* Enhanced layered overlay for better readability */}
-          <div className="absolute inset-0 bg-gradient-to-b from-[#0a0f1e]/80 via-[#0a0f1e]/60 to-[#0a0f1e]/80"></div>
-          <div className="absolute inset-0 bg-gradient-to-r from-[#0a0f1e]/40 via-transparent to-[#0a0f1e]/40"></div>
-        </div>
-      </motion.div>
+    <section className="relative min-h-[90vh] flex items-center justify-center px-4 sm:px-6 lg:px-8 pt-20 overflow-hidden bg-[#0a0f1e]">
+      {/* Animated Mesh Gradient Background */}
+      <div className="absolute inset-0 z-0">
+        <MeshGradient />
+      </div>
+
+      {/* Code Grid Pattern */}
+      <div className="absolute inset-0 z-[1]">
+        <CodeGrid />
+      </div>
+
+      {/* Dark overlay for better contrast */}
+      <div className="absolute inset-0 z-[2] bg-gradient-to-b from-[#0a0f1e]/60 via-[#0a0f1e]/40 to-[#0a0f1e]/60" />
 
       {/* Glowing orbs for depth - using brand colors */}
-      <div className="absolute inset-0 z-[1] overflow-hidden">
-        <GlowingOrb delay={0} size={400} color="rgba(78, 235, 255, 0.5)" />
-        <GlowingOrb delay={5} size={300} color="rgba(0, 170, 255, 0.4)" />
-        <GlowingOrb delay={10} size={350} color="rgba(138, 43, 226, 0.3)" />
+      <div className="absolute inset-0 z-[3] overflow-hidden">
+        <GlowingOrb delay={0} size={500} color="rgba(78, 235, 255, 0.4)" x="10%" y="20%" index={0} />
+        <GlowingOrb delay={5} size={400} color="rgba(0, 170, 255, 0.3)" x="80%" y="60%" index={1} />
+        <GlowingOrb delay={10} size={450} color="rgba(138, 43, 226, 0.25)" x="50%" y="80%" index={2} />
+      </div>
+
+      {/* Floating Geometric Shapes */}
+      <div className="absolute inset-0 z-[4] pointer-events-none">
+        {shapes.map((shape) => (
+          <FloatingShape
+            key={shape.id}
+            delay={shape.delay}
+            shape={shape.shape}
+            size={shape.size}
+            x={shape.x}
+            y={shape.y}
+            colorIndex={shape.colorIndex}
+          />
+        ))}
       </div>
 
       {/* Animated Spark Particles */}
-      <div className="absolute inset-0 z-[2] pointer-events-none">
+      <div className="absolute inset-0 z-[5] pointer-events-none">
         {sparks.map((spark) => (
           <SparkParticle key={spark} delay={spark * 0.1} index={spark} />
         ))}
@@ -146,24 +276,18 @@ export default function Hero() {
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="text-5xl sm:text-6xl lg:text-7xl font-bold text-white mb-6"
-          style={{
-            textShadow: '0 4px 20px rgba(0, 0, 0, 0.8), 0 2px 10px rgba(0, 0, 0, 0.6), 0 0 40px rgba(0, 0, 0, 0.4)',
-          }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-6"
         >
-          Build in Unreal Engine.
+          <span className="gradient-text-full">Build in Unreal Engine.</span>
           <br />
-          Faster. Smarter.
+          <span className="text-white">Faster. Smarter.</span>
         </motion.h1>
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          className="text-xl sm:text-2xl text-gray-100 mb-8 max-w-3xl mx-auto"
-          style={{
-            textShadow: '0 2px 15px rgba(0, 0, 0, 0.8), 0 1px 5px rgba(0, 0, 0, 0.6)',
-          }}
+          transition={{ duration: 0.8, delay: 0.4 }}
+          className="text-xl sm:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto leading-relaxed"
         >
           Synapsify is an AI co-developer that lives in your editor. It generates
           bug-free Blueprints and production-ready C++ from plain English, teaching you
@@ -172,7 +296,7 @@ export default function Hero() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.6 }}
+          transition={{ duration: 0.8, delay: 0.6 }}
         >
           <MagneticButton
             magneticStrength={0.4}
