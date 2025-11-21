@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion'
 import { useState } from 'react'
 import MagneticButton from './MagneticButton'
-import WaitlistModal from './WaitlistModal'
+import GameGateModal from './GameGateModal'
 import AnimatedGradient from './AnimatedGradient'
 
 export default function CallToAction() {
@@ -52,7 +52,7 @@ export default function CallToAction() {
           </MagneticButton>
         </motion.div>
       </div>
-      <WaitlistModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      <GameGateModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </section>
   )
 }

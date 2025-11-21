@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { X } from 'lucide-react'
 import BugInvaders from './BugInvaders'
 import AuthModal from './AuthModal'
+import SuccessModal from './SuccessModal'
 
 interface GameGateModalProps {
     isOpen: boolean
@@ -13,6 +14,9 @@ interface GameGateModalProps {
 
 export default function GameGateModal({ isOpen, onClose }: GameGateModalProps) {
     const [showAuth, setShowAuth] = useState(false)
+    const [showSuccess, setShowSuccess] = useState(false)
+    const [userEmail, setUserEmail] = useState('')
+
 
     const handleGateWin = () => {
         // Delay slightly to show the "Access Granted" message
@@ -60,10 +64,21 @@ export default function GameGateModal({ isOpen, onClose }: GameGateModalProps) {
                             setShowAuth(false)
                             onClose()
                         }}
-                        onSuccess={() => {
-                            // Redirect handled in AuthModal or parent
-                            window.location.href = '/arcade'
+                        onSuccess={(email) => {
+                            setUserEmail(email)
+                            setShowAuth(false)
+                            setShowSuccess(true)
                         }}
+                    />
+
+                    {/* Success Modal - Shows after auth submission */}
+                    <SuccessModal
+                        isOpen={showSuccess}
+                        onClose={() => {
+                            setShowSuccess(false)
+                            onClose()
+                        }}
+                        userEmail={userEmail}
                     />
                 </>
             )}

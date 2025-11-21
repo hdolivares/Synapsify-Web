@@ -4,7 +4,7 @@ import { motion } from 'framer-motion'
 import { useState } from 'react'
 import Image from 'next/image'
 import MagneticButton from './MagneticButton'
-import WaitlistModal from './WaitlistModal'
+import GameGateModal from './GameGateModal'
 
 export default function Navbar() {
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -41,7 +41,7 @@ export default function Navbar() {
           </MagneticButton>
         </div>
       </div>
-      <WaitlistModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      <GameGateModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </motion.nav>
   )
 }

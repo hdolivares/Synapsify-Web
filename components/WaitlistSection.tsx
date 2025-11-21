@@ -81,7 +81,7 @@ export default function WaitlistSection() {
                                     onClick={() => setShowAuth(true)}
                                     className="text-sm text-gray-500 hover:text-white transition-colors"
                                 >
-                                    Already have an account? Sign In
+                                    Already joined? Sign in with email
                                 </button>
                             </div>
                         )}

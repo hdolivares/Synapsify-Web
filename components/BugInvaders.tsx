@@ -11,7 +11,7 @@ interface GameState {
     isPlaying: boolean
     isGameOver: boolean
     score: number
-    wave: number
+    lives: number
     won: boolean
 }
 
@@ -20,13 +20,27 @@ interface BugInvadersProps {
     onGateWin?: () => void
 }
 
+interface Bug {
+    id: number
+    x: number
+    y: number
+    width: number
+    height: number
+}
+
+interface Bullet {
+    id: number
+    x: number
+    y: number
+}
+
 export default function BugInvaders({ mode = 'arcade', onGateWin }: BugInvadersProps) {
     const canvasRef = useRef<HTMLCanvasElement>(null)
     const [gameState, setGameState] = useState<GameState>({
         isPlaying: false,
         isGameOver: false,
         score: 0,
-        wave: 1,
+        lives: 3,
         won: false
     })
     const [user, setUser] = useState<any>(null)
@@ -35,11 +49,22 @@ export default function BugInvaders({ mode = 'arcade', onGateWin }: BugInvadersP
     const [submitted, setSubmitted] = useState(false)
 
     // Game Constants
-    const PLAYER_SPEED = 5
-    const BULLET_SPEED = 7
-    const ENEMY_SPEED = 1
-    const ENEMY_DROP = 20
-    const GATE_SCORE_TARGET = 500
+    const CANVAS_WIDTH = 800
+    const CANVAS_HEIGHT = 600
+    const WIN_CONDITION = mode === 'gate' ? 20 : 0 // 20 bugs for gate, endless for arcade
+
+    // Game refs
+    const playerX = useRef(CANVAS_WIDTH / 2)
+    const playerWidth = 60
+    const playerHeight = 30
+    const bugsRef = useRef<Bug[]>([])
+    const bulletsRef = useRef<Bullet[]>([])
+    const animationFrameRef = useRef<number>()
+    const bugSpeedRef = useRef(1)
+    const bulletSpeedRef = useRef(8)
+    const lastBugTimeRef = useRef(0)
+    const lastBulletTimeRef = useRef(0)
+    const bugsKilledRef = useRef(0)
 
     useEffect(() => {
         // Check auth state
@@ -64,192 +89,190 @@ export default function BugInvaders({ mode = 'arcade', onGateWin }: BugInvadersP
         const ctx = canvas.getContext('2d')
         if (!ctx) return
 
-        // Game Objects
-        let player = { x: canvas.width / 2, y: canvas.height - 50, width: 40, height: 40 }
-        let bullets: any[] = []
-        let enemies: any[] = []
-        let particles: any[] = []
-        let animationFrameId: number
-        let lastShot = 0
-        let enemyDirection = 1
+        // Keyboard controls
+        const keysPressed = new Set<string>()
 
-        // Initialize Enemies
-        const initEnemies = () => {
-            enemies = []
-            const rows = 3 + Math.min(gameState.wave, 3)
-            const cols = 8
-            const padding = 50
-            const width = 30
-            const height = 30
-
-            for (let i = 0; i < rows; i++) {
-                for (let j = 0; j < cols; j++) {
-                    enemies.push({
-                        x: padding + j * (width + 20),
-                        y: padding + i * (height + 20),
-                        width,
-                        height,
-                        type: i === 0 ? 'bug_hard' : 'bug_normal'
-                    })
-                }
-            }
-        }
-
-        initEnemies()
-
-        // Input Handling
-        const keys: { [key: string]: boolean } = {}
         const handleKeyDown = (e: KeyboardEvent) => {
-            // Prevent scrolling with arrow keys and space when game is focused/playing
-            if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space'].includes(e.code)) {
+            const key = e.key.toLowerCase()
+            if (key === 'arrowleft' || key === 'a') {
+                keysPressed.add('left')
+            } else if (key === 'arrowright' || key === 'd') {
+                keysPressed.add('right')
+            } else if (key === ' ' || key === 'arrowup') {
+                keysPressed.add('shoot')
                 e.preventDefault()
             }
-            keys[e.code] = true
         }
-        const handleKeyUp = (e: KeyboardEvent) => keys[e.code] = false
+
+        const handleKeyUp = (e: KeyboardEvent) => {
+            const key = e.key.toLowerCase()
+            if (key === 'arrowleft' || key === 'a') {
+                keysPressed.delete('left')
+            } else if (key === 'arrowright' || key === 'd') {
+                keysPressed.delete('right')
+            } else if (key === ' ' || key === 'arrowup') {
+                keysPressed.delete('shoot')
+            }
+        }
+
+        // Movement and shooting update loop
+        const movementInterval = setInterval(() => {
+            if (keysPressed.has('left')) {
+                playerX.current = Math.max(playerWidth / 2, playerX.current - 10)
+            }
+            if (keysPressed.has('right')) {
+                playerX.current = Math.min(CANVAS_WIDTH - playerWidth / 2, playerX.current + 10)
+            }
+            if (keysPressed.has('shoot')) {
+                const now = Date.now()
+                if (now - lastBulletTimeRef.current > 200) {
+                    bulletsRef.current.push({
+                        id: Math.random(),
+                        x: playerX.current - 2,
+                        y: CANVAS_HEIGHT - 50,
+                    })
+                    lastBulletTimeRef.current = now
+                }
+            }
+        }, 16) // ~60fps
+
+        // Game loop
+        const gameLoop = () => {
+            // Clear canvas
+            ctx.fillStyle = '#0a0f1e'
+            ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT)
+
+            // Draw stars background
+            ctx.fillStyle = '#4eebff'
+            for (let i = 0; i < 50; i++) {
+                const x = (i * 73) % CANVAS_WIDTH
+                const y = (i * 137) % CANVAS_HEIGHT
+                ctx.fillRect(x, y, 2, 2)
+            }
+
+            // Spawn bugs
+            const now = Date.now()
+            if (now - lastBugTimeRef.current > 1000 - bugsRef.current.length * 50) {
+                bugsRef.current.push({
+                    id: Math.random(),
+                    x: Math.random() * (CANVAS_WIDTH - 40),
+                    y: -40,
+                    width: 40,
+                    height: 40,
+                })
+                lastBugTimeRef.current = now
+            }
+
+            // Move bugs downward
+            bugsRef.current = bugsRef.current.map((bug) => ({
+                ...bug,
+                y: bug.y + bugSpeedRef.current,
+            }))
+
+            // Check if bugs reached bottom (lose lives)
+            const bugsReachedBottom = bugsRef.current.filter((bug) => bug.y > CANVAS_HEIGHT)
+            if (bugsReachedBottom.length > 0) {
+                setGameState(prev => {
+                    const newLives = prev.lives - bugsReachedBottom.length
+                    if (newLives <= 0) {
+                        return { ...prev, lives: 0, isGameOver: true, isPlaying: false }
+                    }
+                    return { ...prev, lives: newLives }
+                })
+                bugsRef.current = bugsRef.current.filter((bug) => bug.y <= CANVAS_HEIGHT)
+            }
+
+            // Move bullets upward
+            bulletsRef.current = bulletsRef.current
+                .map((bullet) => ({
+                    ...bullet,
+                    y: bullet.y - bulletSpeedRef.current,
+                }))
+                .filter((bullet) => bullet.y > 0)
+
+            // Check collisions
+            bulletsRef.current = bulletsRef.current.filter((bullet) => {
+                const hitBug = bugsRef.current.find(
+                    (bug) =>
+                        bullet.x < bug.x + bug.width &&
+                        bullet.x + 4 > bug.x &&
+                        bullet.y < bug.y + bug.height &&
+                        bullet.y + 10 > bug.y
+                )
+
+                if (hitBug) {
+                    bugsRef.current = bugsRef.current.filter((b) => b.id !== hitBug.id)
+                    bugsKilledRef.current += 1
+
+                    setGameState(prev => ({ ...prev, score: prev.score + 1 }))
+
+                    // Increase difficulty
+                    bugSpeedRef.current = Math.min(bugSpeedRef.current + 0.1, 3)
+
+                    // Check win condition (gate mode only)
+                    if (mode === 'gate' && bugsKilledRef.current >= WIN_CONDITION) {
+                        setGameState(prev => ({ ...prev, won: true, isPlaying: false }))
+                        return false
+                    }
+                    return false
+                }
+                return true
+            })
+
+            // Draw player (spaceship)
+            ctx.fillStyle = '#4eebff'
+            ctx.beginPath()
+            ctx.moveTo(playerX.current, CANVAS_HEIGHT - 50)
+            ctx.lineTo(playerX.current - playerWidth / 2, CANVAS_HEIGHT - 20)
+            ctx.lineTo(playerX.current + playerWidth / 2, CANVAS_HEIGHT - 20)
+            ctx.closePath()
+            ctx.fill()
+
+            // Add glow effect to player
+            ctx.shadowBlur = 20
+            ctx.shadowColor = '#4eebff'
+            ctx.fill()
+            ctx.shadowBlur = 0
+
+            // Draw bugs with faces
+            bugsRef.current.forEach((bug) => {
+                ctx.fillStyle = '#ff8c3f'
+                ctx.fillRect(bug.x, bug.y, bug.width, bug.height)
+
+                // Bug face
+                ctx.fillStyle = '#000'
+                ctx.fillRect(bug.x + 8, bug.y + 8, 8, 8) // Left eye
+                ctx.fillRect(bug.x + 24, bug.y + 8, 8, 8) // Right eye
+                ctx.fillRect(bug.x + 12, bug.y + 20, 16, 4) // Mouth
+            })
+
+            // Draw bullets with glow
+            bulletsRef.current.forEach((bullet) => {
+                ctx.fillStyle = '#00aaff'
+                ctx.shadowBlur = 10
+                ctx.shadowColor = '#00aaff'
+                ctx.fillRect(bullet.x, bullet.y, 4, 10)
+                ctx.shadowBlur = 0
+            })
+
+            if (gameState.isPlaying && !gameState.won && !gameState.isGameOver) {
+                animationFrameRef.current = requestAnimationFrame(gameLoop)
+            }
+        }
 
         window.addEventListener('keydown', handleKeyDown)
         window.addEventListener('keyup', handleKeyUp)
-
-        // Game Loop
-        const render = (time: number) => {
-            // Clear Canvas
-            ctx.fillStyle = '#0a0f1e'
-            ctx.fillRect(0, 0, canvas.width, canvas.height)
-
-            // Player Movement
-            if (keys['ArrowLeft'] || keys['KeyA']) player.x = Math.max(0, player.x - PLAYER_SPEED)
-            if (keys['ArrowRight'] || keys['KeyD']) player.x = Math.min(canvas.width - player.width, player.x + PLAYER_SPEED)
-
-            // Shooting
-            if ((keys['Space'] || keys['ArrowUp']) && time - lastShot > 300) {
-                bullets.push({ x: player.x + player.width / 2 - 2, y: player.y, width: 4, height: 10 })
-                lastShot = time
-            }
-
-            // Update Bullets
-            bullets = bullets.filter(b => b.y > 0)
-            bullets.forEach(b => {
-                b.y -= BULLET_SPEED
-                ctx.fillStyle = '#4eebff'
-                ctx.fillRect(b.x, b.y, b.width, b.height)
-            })
-
-            // Update Enemies
-            let hitWall = false
-            enemies.forEach(e => {
-                e.x += ENEMY_SPEED * enemyDirection * (1 + gameState.wave * 0.1)
-                if (e.x <= 0 || e.x + e.width >= canvas.width) hitWall = true
-            })
-
-            if (hitWall) {
-                enemyDirection *= -1
-                enemies.forEach(e => e.y += ENEMY_DROP)
-            }
-
-            // Collision Detection
-            bullets.forEach((b, bIdx) => {
-                enemies.forEach((e, eIdx) => {
-                    if (
-                        b.x < e.x + e.width &&
-                        b.x + b.width > e.x &&
-                        b.y < e.y + e.height &&
-                        b.y + b.height > e.y
-                    ) {
-                        // Hit!
-                        bullets.splice(bIdx, 1)
-                        enemies.splice(eIdx, 1)
-
-                        setGameState(prev => {
-                            const newScore = prev.score + 100
-
-                            // Check Gate Win Condition
-                            if (mode === 'gate' && newScore >= GATE_SCORE_TARGET) {
-                                return { ...prev, score: newScore, won: true, isPlaying: false }
-                            }
-
-                            return { ...prev, score: newScore }
-                        })
-
-                        // Explosion Particles
-                        for (let i = 0; i < 5; i++) {
-                            particles.push({
-                                x: e.x + e.width / 2,
-                                y: e.y + e.height / 2,
-                                vx: (Math.random() - 0.5) * 5,
-                                vy: (Math.random() - 0.5) * 5,
-                                life: 1
-                            })
-                        }
-                    }
-                })
-            })
-
-            // Draw Enemies
-            enemies.forEach(e => {
-                ctx.fillStyle = e.type === 'bug_hard' ? '#ff4e4e' : '#4eff4e'
-                // Draw Bug Shape (Simple)
-                ctx.beginPath()
-                ctx.arc(e.x + e.width / 2, e.y + e.height / 2, e.width / 2, 0, Math.PI * 2)
-                ctx.fill()
-                // Eyes
-                ctx.fillStyle = '#000'
-                ctx.fillRect(e.x + 8, e.y + 8, 4, 4)
-                ctx.fillRect(e.x + e.width - 12, e.y + 8, 4, 4)
-            })
-
-            // Draw Player
-            ctx.fillStyle = '#4eebff'
-            ctx.beginPath()
-            ctx.moveTo(player.x + player.width / 2, player.y)
-            ctx.lineTo(player.x + player.width, player.y + player.height)
-            ctx.lineTo(player.x, player.y + player.height)
-            ctx.fill()
-
-            // Update & Draw Particles
-            particles = particles.filter(p => p.life > 0)
-            particles.forEach(p => {
-                p.x += p.vx
-                p.y += p.vy
-                p.life -= 0.05
-                ctx.fillStyle = `rgba(255, 255, 255, ${p.life})`
-                ctx.fillRect(p.x, p.y, 2, 2)
-            })
-
-            // Win/Loss Conditions
-            if (enemies.length === 0) {
-                // Wave Cleared
-                if (mode === 'gate') {
-                    // In gate mode, clearing a wave is good but we check score mainly. 
-                    // If they clear wave but score < 500, respawn? 
-                    // For simplicity, let's just respawn enemies but keep score
-                    initEnemies()
-                } else {
-                    // Arcade mode - next wave
-                    setGameState(prev => ({ ...prev, wave: prev.wave + 1 }))
-                    initEnemies()
-                }
-            }
-
-            enemies.forEach(e => {
-                if (e.y + e.height >= player.y) {
-                    setGameState(prev => ({ ...prev, isGameOver: true, isPlaying: false }))
-                }
-            })
-
-            if (gameState.isPlaying && !gameState.won) {
-                animationFrameId = requestAnimationFrame(render)
-            }
-        }
-
-        animationFrameId = requestAnimationFrame(render)
+        animationFrameRef.current = requestAnimationFrame(gameLoop)
 
         return () => {
             window.removeEventListener('keydown', handleKeyDown)
             window.removeEventListener('keyup', handleKeyUp)
-            cancelAnimationFrame(animationFrameId)
+            clearInterval(movementInterval)
+            if (animationFrameRef.current) {
+                cancelAnimationFrame(animationFrameRef.current)
+            }
         }
-    }, [gameState.isPlaying, gameState.wave, mode])
+    }, [gameState.isPlaying, mode, gameState.won, gameState.isGameOver])
 
     // Trigger onGateWin when won in gate mode
     useEffect(() => {
@@ -263,10 +286,15 @@ export default function BugInvaders({ mode = 'arcade', onGateWin }: BugInvadersP
             isPlaying: true,
             isGameOver: false,
             score: 0,
-            wave: 1,
+            lives: 3,
             won: false
         })
         setSubmitted(false)
+        bugsKilledRef.current = 0
+        bugsRef.current = []
+        bulletsRef.current = []
+        playerX.current = CANVAS_WIDTH / 2
+        bugSpeedRef.current = 1
     }
 
     const submitScore = async () => {
@@ -276,7 +304,6 @@ export default function BugInvaders({ mode = 'arcade', onGateWin }: BugInvadersP
         }
         setSubmitting(true)
         try {
-            // Use email username part as display name for now
             const username = user.email?.split('@')[0] || 'Anonymous'
 
             const { error } = await supabase
@@ -293,7 +320,7 @@ export default function BugInvaders({ mode = 'arcade', onGateWin }: BugInvadersP
         }
     }
 
-    // Render simplified view for Gate Mode (just the game canvas, no section wrapper if embedded)
+    // Render simplified view for Gate Mode
     const GameContent = () => (
         <div className="relative aspect-[4/3] bg-[#0a0f1e] rounded-xl overflow-hidden border border-white/10 shadow-2xl mx-auto max-w-4xl">
             <canvas
@@ -304,9 +331,20 @@ export default function BugInvaders({ mode = 'arcade', onGateWin }: BugInvadersP
             />
 
             {/* UI Overlays */}
-            <div className="absolute top-4 left-4 text-white font-mono text-xl z-10">
-                SCORE: {gameState.score} {mode === 'gate' && `/ ${GATE_SCORE_TARGET}`}
-            </div>
+            {gameState.isPlaying && (
+                <div className="absolute top-4 left-4 right-4 flex justify-between text-white font-mono z-10">
+                    <div className="text-xl">
+                        {mode === 'gate' ? (
+                            <span className="text-[#4eebff] font-bold">BUGS: {bugsKilledRef.current}/{WIN_CONDITION}</span>
+                        ) : (
+                            <span className="text-[#4eebff] font-bold">SCORE: {gameState.score}</span>
+                        )}
+                    </div>
+                    <div className="text-xl">
+                        <span className="text-red-400 font-bold">LIVES: {'❤️'.repeat(gameState.lives)}</span>
+                    </div>
+                </div>
+            )}
 
             <AnimatePresence>
                 {!gameState.isPlaying && !gameState.isGameOver && !gameState.won && (
@@ -316,9 +354,9 @@ export default function BugInvaders({ mode = 'arcade', onGateWin }: BugInvadersP
                         exit={{ opacity: 0 }}
                         className="absolute inset-0 flex flex-col items-center justify-center bg-black/80 backdrop-blur-sm z-20"
                     >
-                        <h3 className="text-4xl font-bold text-white mb-8">BUG INVADERS</h3>
+                        <h3 className="text-4xl font-bold text-white mb-8">DEBUG THE CODE!</h3>
                         {mode === 'gate' && (
-                            <p className="text-accent-blue mb-6 text-lg">Score {GATE_SCORE_TARGET} points to unlock access</p>
+                            <p className="text-accent-blue mb-6 text-lg">Destroy {WIN_CONDITION} bugs to unlock access</p>
                         )}
                         <button
                             onClick={startGame}
@@ -338,7 +376,7 @@ export default function BugInvaders({ mode = 'arcade', onGateWin }: BugInvadersP
                         className="absolute inset-0 flex flex-col items-center justify-center bg-red-900/80 backdrop-blur-sm z-20"
                     >
                         <h3 className="text-4xl font-bold text-white mb-4">SYSTEM FAILURE</h3>
-                        <p className="text-xl text-white/80 mb-8">Score: {gameState.score}</p>
+                        <p className="text-xl text-white/80 mb-8">Bugs Destroyed: {bugsKilledRef.current}</p>
                         <button
                             onClick={startGame}
                             className="px-8 py-4 bg-white text-red-900 hover:bg-gray-200 rounded-full font-bold text-xl flex items-center gap-3 transition-all hover:scale-105"
@@ -413,7 +451,7 @@ export default function BugInvaders({ mode = 'arcade', onGateWin }: BugInvadersP
                     >
                         <Trophy className="w-20 h-20 text-yellow-400 mb-6 animate-bounce" />
                         <h3 className="text-4xl font-bold text-white mb-2">ACCESS GRANTED</h3>
-                        <p className="text-xl text-white/80 mb-8">Target Reached!</p>
+                        <p className="text-xl text-white/80 mb-8">All Bugs Eliminated!</p>
                         <div className="flex items-center gap-2 text-accent-blue animate-pulse">
                             Proceeding to registration <ArrowRight className="w-5 h-5" />
                         </div>
@@ -423,7 +461,7 @@ export default function BugInvaders({ mode = 'arcade', onGateWin }: BugInvadersP
         </div>
     )
 
-    // If Gate mode, just return the game content (no section wrapper)
+    // If Gate mode, just return the game content
     if (mode === 'gate') {
         return <GameContent />
     }
