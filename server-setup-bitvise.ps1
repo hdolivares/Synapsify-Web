@@ -38,7 +38,7 @@ try {
     $testResult = & $bitviseExec -profile=$profile -cmd="echo 'Connection test'"
     if ($LASTEXITCODE -ne 0) {
         Write-Error "Failed to connect. Please accept host key first using Bitvise GUI or stermc"
-        Write-Host "Run: & 'C:\Program Files (x86)\Bitvise SSH Client\stermc.exe' -profile='.\synapsify.tlp'" -ForegroundColor Yellow
+        Write-Host "Run: stermc.exe -profile='.\synapsify.tlp'" -ForegroundColor Yellow
         exit 1
     }
     Write-Success "Connection successful!"

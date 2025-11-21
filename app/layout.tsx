@@ -4,6 +4,7 @@ import './globals.css'
 import SmoothScroll from '@/components/SmoothScroll'
 import CustomCursor from '@/components/CustomCursor'
 import ScrollProgress from '@/components/ScrollProgress'
+import Preloader from '@/components/Preloader'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -18,10 +19,10 @@ const spaceGrotesk = Space_Grotesk({
 })
 
 export const metadata: Metadata = {
-  title: 'Synapsify - Build in Unreal Engine. Faster. Smarter.',
-  description: 'Synapsify is an AI co-developer that lives in your editor. It generates bug-free Blueprints and production-ready C++ from plain English.',
+  title: 'Cortx - Cursor for Game Development',
+  description: 'Cortx is an AI co-developer that lives in your editor. Build faster. Learn faster. Ship better.',
   icons: {
-    icon: '/Synapsify Logo 512.png',
+    icon: '/cortx-logo.png',
   },
 }
 
@@ -34,6 +35,7 @@ export default function RootLayout({
     <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable}`}>
       <body className="antialiased">
         <SmoothScroll>
+          <Preloader />
           <CustomCursor />
           <ScrollProgress />
           {children}

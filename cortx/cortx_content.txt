@@ -1,0 +1,307 @@
+Cortx
+
+Cursor for game development
+Integrated AI for game development, inside the
+editor
+Build faster. Learn faster. Ship
+better.
+
+Problem
+Game dev AI is fragmented and
+out-of-ﬂow
+Breaking Focus
+
+Missing Context
+
+Slow Onboarding
+
+Switching to external AI tools
+
+Generated code lacks project
+
+Onboarding new devs to Unreal is
+
+breaks focus and slows iteration
+
+context and Unreal best practices
+
+slow; knowledge transfer is ad-hoc
+
+Vision
+
+AI-native development, inside Unreal
+
+Self-contained, agentic assistance in the editor
+
+Context-aware of local codebase, assets, and Blueprints
+
+Generation + explanation to accelerate learning and quality
+
+Solution
+AI maturity meets Unreal
+adoption
+Reliable AI
+
+Shared Knowledge
+
+LLMs now reliable for structured,
+
+Quality +
+Velocity
+Studios seek velocity without
+
+domain-speciﬁc tasks
+
+sacriﬁcing quality
+
+"engineering intuition" embedded in
+
+Remote teams need shared
+tools
+
+Product Deep Dive
+Key Capabilities
+
+Blueprint
+Integration
+Generate/modify graphs, nodes, and
+
+C++ Scaffolding
+
+Context Hooks
+
+Modules, components, UPROPERTY/
+
+Build graph, dependencies,
+
+connections
+
+UFUNCTION patterns
+
+gameplay framework awareness
+
+Explainers
+
+Agentic Tasks
+
+"Why this change" + links to Unreal docs &
+
+"Implement sprint ability," "Refactor input," "Add
+
+patterns
+
+save/load"
+
+Market Opportunity
+
+Top-down market size
+
+● Global games market: $187.7B in 2024 (revised) and $188.9B forecast for 2025.
+Reuters+1
+
+AI in gaming (size & trajectory)
+● 2024 market estimates vary widely: $1.47B–$5.85B (deﬁnitions differ: "AI in gaming" vs. "generative AI in gaming"). Long-term forecasts project ~$37.9B–$51.3B by 2033–2034. The
+Business Research Company+2Grand View Research+2
+
+Adoption
+signals
+
+•
+
+1 in 5 games released on Steam in 2025 disclose gen-AI use (≈7,818 titles; ~7% of the entire Steam library). Tom's
+
+•
+
+Hardware
+GitHub Copilot: Microsoft reports 20M users and adoption by 90% of the Fortune 100 (Q4 FY25). Strong willingness to pay for in-editor AI assistance.
+
+•
+
+Microsoft
+Engine seat scale proxy: Unity reports 1.2M monthly active Unity Editor users—a useful upper-bound signal for engine-native tool
+TAM. Unity
+
+Engine-speciﬁc dynamics (Unreal)
+•
+•
+
+Epic lowered UE royalties to 3.5% for games that also launch on Epic Games Store starting 2025—evidence of continued investment in the UE ecosystem and dev incentives. The
+Verge
+
+For non-game industries, UE moved to seat-based pricing ($1,850/seat/yr), highlighting enterprise willingness to pay for engine-native capability.
+Unreal Engine
+
+Illustrative bottom-up
+SAM
+
+● If we targets 50k–100k Unreal pro seats globally and prices at $25–$40/seat/mo, SAM is $15–$48M ARR. (Assumptions shown for planning; actuals will depend on conversion in
+indie/studio segments.)
+
+Business Model
+Individual plans (seat-based,
+usage-tiered)
+
+Hobby (Free)
+limited Agent requests & tab completions; short Pro
+
+Pro
+$20/mo
+extended Agent limits, unlimited tab completions, Background Agents, max
+
+trial.
+
+context windows.
+
+Pro+ $60/mo
+everything in Pro + ~3× usage on
+
+Ultra
+$200/mo
+everything in Pro + ~20× usage and priority access to new
+
+OpenAI/Claude/Gemini.
+
+features
+
+Business plans
+Teams
+$40/user/mo
+everything in Pro + centralized team billing, usage analytics/reporting, org-wide
+
+Enterprise Custom
+
+privacy mode, RBAC, SAML/OIDC SSO.
+
+AI code-tracking API & audit logs, granular admin/model controls, priority
+
+everything in Teams + pooled usage, invoice/PO billing, SCIM seat management,
+support & account management.
+
+Differentiation
+Engine-native + domain
+intelligence
+
+Native Unreal
+
+Local context
+
+integration
+(Blueprints, modules, build
+
+ingestion
+for accurate changes and fewer
+
+system)
+
+regressions
+
+Agentic
+
+Knowledge graph
+
+workﬂows
+tuned to game tasks, not generic
+
+of Unreal patterns/best practices improves over
+
+prompts
+
+time
+
+Competitio
+Positionin
+
+n
+g
+
+Generic AI code tools
+
+Editor
+
+In-house scripts
+
+Great for text; weak in engine
+
+plugins
+Limited scope; lack agentic, multi-step
+
+Costly to maintain; not reusable across teams
+
+context
+
+reliability
+
+Team
+
+Experienced, complementary founders
+
+Hugo (Unreal)
+
+Jorge Ruiz (Eng/Founder)
+
+Cristina Manrique (Eng/Lead)
+
+4+ yrs UE dev; C++, Blueprints, systems; led Web3 game
+
+15+ yrs; ex-CTO/CEO; co-founded Airtm (4M+ users); built Heurist.ai agent framework
+
+12+ yrs; computer vision, AR/VR pioneer; technical lead; agentic system
+
+teams
+
+builds
+
+The Ask
+Use of funds (18
+months):
+
+50%
+
+25%
+
+Product & Engine
+
+Agent
+
+product & engine
+
+Reliability
+agent reliability
+& infra (security,
+
+integrations
+
+VPC)
+
+15%
+
+10%
+
+Go-to-Marke
+
+Operations
+
+t
+GTM (community
++ studio
+
+ops &
+
+pilots)
+
+compliance
+
+Final
+
+Build better, faster, smarter—inside Unreal
+
+thoughts
+
+Integrated, agentic, context-aware development
+
+Up-level teams and accelerate
+time-to-fun
+
+Let's bring AI-native workﬂows to game development
+
+

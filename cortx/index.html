@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cortx - Cursor for Game Development</title>
+    <meta name="description"
+        content="Integrated AI for game development, inside the editor. Build faster. Learn faster. Ship better.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="#" class="logo">
+                <img src="assets/logo_transparent.png" alt="Cortx Logo">
+                <span>Cortx</span>
+            </a>
+            <div class="nav-links">
+                <a href="#features">Features</a>
+                <a href="#pricing">Pricing</a>
+                <a href="#team">Team</a>
+                <a href="#contact" class="btn btn-primary">Get Early Access</a>
+            </div>
+            <div class="mobile-menu-btn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-bg-glow"></div>
+            <div class="container hero-content">
+                <img src="assets/logo_transparent.png" alt="Cortx Logo" class="hero-logo fade-in-up">
+                <h1 class="fade-in-up delay-1">Cursor for <span class="gradient-text">Game Development</span></h1>
+                <p class="hero-subtitle fade-in-up delay-2">Integrated AI for game development, inside the
+                    editor.<br>Build faster. Learn faster. Ship better.</p>
+                <div class="hero-cta fade-in-up delay-3">
+                    <a href="#" class="btn btn-primary btn-lg">Join Waitlist</a>
+                    <a href="#demo" class="btn btn-outline btn-lg">Watch Demo</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Problem Section -->
+        <section class="problem-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>The Problem</h2>
+                    <p>Game dev AI is fragmented and out-of-flow</p>
+                </div>
+                <div class="grid-3">
+                    <div class="card problem-card">
+                        <div class="icon-box">💔</div>
+                        <h3>Breaking Focus</h3>
+                        <p>Switching to external AI tools breaks focus and slows iteration.</p>
+                    </div>
+                    <div class="card problem-card">
+                        <div class="icon-box">🧩</div>
+                        <h3>Missing Context</h3>
+                        <p>Generated code lacks project context and Unreal best practices.</p>
+                    </div>
+                    <div class="card problem-card">
+                        <div class="icon-box">🐢</div>
+                        <h3>Slow Onboarding</h3>
+                        <p>Onboarding new devs to Unreal is slow; knowledge transfer is ad-hoc.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Solution/Vision Section -->
+        <section class="vision-section">
+            <div class="container">
+                <div class="vision-content">
+                    <div class="vision-text">
+                        <h2>The Vision</h2>
+                        <p class="lead">AI-native development, inside Unreal.</p>
+                        <ul class="feature-list">
+                            <li><span>✨</span> Self-contained, agentic assistance in the editor</li>
+                            <li><span>🧠</span> Context-aware of local codebase, assets, and Blueprints</li>
+                            <li><span>🚀</span> Generation + explanation to accelerate learning and quality</li>
+                        </ul>
+                    </div>
+                    <div class="vision-visual">
+                        <div class="glass-panel">
+                            <div class="code-mockup">
+                                <div class="code-header">
+                                    <span class="dot red"></span>
+                                    <span class="dot yellow"></span>
+                                    <span class="dot green"></span>
+                                </div>
+                                <div class="code-body">
+                                    <div class="line"><span class="keyword">void</span> <span
+                                            class="function">ACortxCharacter</span>::<span
+                                            class="function">SetupPlayerInputComponent</span>() {</div>
+                                    <div class="line indent">Super::<span
+                                            class="function">SetupPlayerInputComponent</span>(PlayerInputComponent);
+                                    </div>
+                                    <div class="line indent comment">// AI: Implementing sprint ability...</div>
+                                    <div class="line indent">PlayerInputComponent-><span
+                                            class="function">BindAction</span>(<span class="string">"Sprint"</span>,
+                                        IE_Pressed, <span class="keyword">this</span>, &ACharacter::<span
+                                            class="function">Sprint</span>);</div>
+                                    <div class="line">}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section id="features" class="features-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Key Capabilities</h2>
+                    <p>Engine-native + Domain Intelligence</p>
+                </div>
+                <div class="grid-2">
+                    <div class="feature-card">
+                        <div class="feature-icon">🔌</div>
+                        <h3>Blueprint Integration</h3>
+                        <p>Generate/modify graphs, nodes, and connections directly within the editor.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🏗️</div>
+                        <h3>C++ Scaffolding</h3>
+                        <p>Modules, components, UPROPERTY/UFUNCTION patterns, and build graph dependencies.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🔗</div>
+                        <h3>Context Hooks</h3>
+                        <p>Deep awareness of gameplay framework and local project structure.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🤖</div>
+                        <h3>Agentic Tasks</h3>
+                        <p>"Implement sprint ability," "Refactor input," "Add save/load" - handled autonomously.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pricing Section -->
+        <section id="pricing" class="pricing-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Pricing Plans</h2>
+                    <p>Flexible options for individuals and teams</p>
+                </div>
+                <div class="pricing-grid">
+                    <div class="pricing-card">
+                        <div class="plan-name">Hobby</div>
+                        <div class="plan-price">Free</div>
+                        <ul class="plan-features">
+                            <li>Limited Agent requests</li>
+                            <li>Tab completions</li>
+                            <li>Short Pro trial</li>
+                        </ul>
+                        <a href="#" class="btn btn-outline full-width">Get Started</a>
+                    </div>
+                    <div class="pricing-card popular">
+                        <div class="popular-tag">Most Popular</div>
+                        <div class="plan-name">Pro</div>
+                        <div class="plan-price">$20<span>/mo</span></div>
+                        <ul class="plan-features">
+                            <li>Extended Agent limits</li>
+                            <li>Unlimited tab completions</li>
+                            <li>Background Agents</li>
+                            <li>Max context windows</li>
+                        </ul>
+                        <a href="#" class="btn btn-primary full-width">Start Pro</a>
+                    </div>
+                    <div class="pricing-card">
+                        <div class="plan-name">Pro+</div>
+                        <div class="plan-price">$60<span>/mo</span></div>
+                        <ul class="plan-features">
+                            <li>Everything in Pro</li>
+                            <li>~3× usage on OpenAI/Claude/Gemini</li>
+                        </ul>
+                        <a href="#" class="btn btn-outline full-width">Upgrade</a>
+                    </div>
+                    <div class="pricing-card">
+                        <div class="plan-name">Ultra</div>
+                        <div class="plan-price">$200<span>/mo</span></div>
+                        <ul class="plan-features">
+                            <li>Everything in Pro</li>
+                            <li>~20× usage</li>
+                            <li>Priority access to new features</li>
+                        </ul>
+                        <a href="#" class="btn btn-outline full-width">Go Ultra</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Team Section -->
+        <section id="team" class="team-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>The Team</h2>
+                    <p>Experienced, complementary founders</p>
+                </div>
+                <div class="grid-3">
+                    <div class="team-card">
+                        <div class="avatar-placeholder">H</div>
+                        <h3>Hugo</h3>
+                        <span class="role">Unreal Expert</span>
+                        <p>4+ yrs UE dev; C++, Blueprints, systems; led Web3 game teams.</p>
+                    </div>
+                    <div class="team-card">
+                        <div class="avatar-placeholder">J</div>
+                        <h3>Jorge Ruiz</h3>
+                        <span class="role">Eng/Founder</span>
+                        <p>15+ yrs; ex-CTO/CEO; co-founded Airtm (4M+ users); built Heurist.ai agent framework.</p>
+                    </div>
+                    <div class="team-card">
+                        <div class="avatar-placeholder">C</div>
+                        <h3>Cristina Manrique</h3>
+                        <span class="role">Eng/Lead</span>
+                        <p>12+ yrs; computer vision, AR/VR pioneer; technical lead; agentic system builds.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <div class="container footer-content">
+                <div class="footer-brand">
+                    <img src="assets/logo.png" alt="Cortx Logo" class="footer-logo">
+                    <p>Build better, faster, smarter—inside Unreal.</p>
+                </div>
+                <div class="footer-links">
+                    <div class="link-group">
+                        <h4>Product</h4>
+                        <a href="#">Features</a>
+                        <a href="#">Pricing</a>
+                        <a href="#">Changelog</a>
+                    </div>
+                    <div class="link-group">
+                        <h4>Company</h4>
+                        <a href="#">About</a>
+                        <a href="#">Blog</a>
+                        <a href="#">Careers</a>
+                    </div>
+                    <div class="link-group">
+                        <h4>Connect</h4>
+                        <a href="#">Twitter</a>
+                        <a href="#">Discord</a>
+                        <a href="#">LinkedIn</a>
+                    </div>
+                </div>
+            </div>
+            <div class="container copyright">
+                <p>&copy; 2025 Cortx. All rights reserved.</p>
+            </div>
+        </footer>
+    </main>
+
+    <script src="js/main.js"></script>
+</body>
+
+</html>

@@ -3,121 +3,54 @@
 @tailwind utilities;
 
 :root {
-  /* Beautiful Dark Mode Base Colors - Navy/Indigo Theme */
-  --background: #0a0f1e; /* Deep navy blue - warmer than pure black */
-  --background-secondary: #0f1626; /* Slightly lighter navy */
-  --background-tertiary: #1a2332; /* Card/section backgrounds */
-  --background-elevated: #242b3d; /* Elevated surfaces */
+  /* Cyber-Neural Theme */
+  --background: #0B0F19;
+  --background-secondary: #111827;
+  --background-tertiary: #1F2937;
   
-  /* Foreground Colors - Warmer whites with subtle blue tint */
-  --foreground: #e8f0f7; /* Soft white with blue tint */
-  --foreground-secondary: #b8c5d6; /* Muted text */
-  --foreground-muted: #8b9cb0; /* Subtle text */
+  --foreground: #F3F4F6;
+  --foreground-secondary: #9CA3AF;
   
-  /* Synapsify Brand Colors - Cyan to Purple Gradient Palette */
-  --cyan-bright: #4eebff;
-  --cyan-light: #a1eaff;
-  --blue-vibrant: #00aaff;
-  --purple-rich: #8a2be2;
-  --magenta-deep: #c700ff;
+  --primary: #3B82F6;
+  --primary-glow: rgba(59, 130, 246, 0.5);
   
-  /* Accent Background Variations */
-  --cyan-bg-subtle: rgba(78, 235, 255, 0.08);
-  --blue-bg-subtle: rgba(0, 170, 255, 0.08);
-  --purple-bg-subtle: rgba(138, 43, 226, 0.08);
+  --accent-purple: #8B5CF6;
+  --accent-cyan: #06b6d4;
 }
 
 body {
   color: var(--foreground);
-  background: linear-gradient(180deg, var(--background) 0%, var(--background-secondary) 100%);
-  background-attachment: fixed;
-  font-family: var(--font-inter), system-ui, -apple-system, sans-serif;
-  min-height: 100vh;
+  background: var(--background);
+  font-family: var(--font-inter), system-ui, sans-serif;
+  overflow-x: hidden;
 }
 
-/* Modern font classes */
 h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-space-grotesk), system-ui, -apple-system, sans-serif;
-  font-weight: 700;
-  letter-spacing: -0.02em;
+  font-family: var(--font-space-grotesk), system-ui, sans-serif;
 }
 
-/* Hide default cursor on desktop for custom cursor */
-@media (min-width: 768px) {
-  body {
-    cursor: none;
-  }
-}
-
+/* Custom Utilities */
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
   
-  /* Gradient text utilities */
-  .gradient-text-cyan {
-    @apply text-transparent bg-clip-text bg-gradient-to-r from-[#4eebff] to-[#00aaff];
+  .glass-panel {
+    @apply bg-gray-900/40 backdrop-blur-md border border-white/10;
   }
   
-  .gradient-text-purple {
-    @apply text-transparent bg-clip-text bg-gradient-to-r from-[#00aaff] to-[#8a2be2];
+  .text-glow {
+    text-shadow: 0 0 20px var(--primary-glow);
   }
   
-  .gradient-text-full {
-    @apply text-transparent bg-clip-text bg-gradient-to-r from-[#4eebff] via-[#00aaff] to-[#8a2be2];
-  }
-  
-  /* Gradient button utilities */
-  .gradient-button-primary {
-    @apply bg-gradient-to-r from-[#4eebff] to-[#00aaff] text-white font-semibold;
-  }
-  
-  .gradient-button-secondary {
-    @apply bg-gradient-to-r from-[#00aaff] to-[#8a2be2] text-white font-semibold;
-  }
-  
-  /* Gradient border utilities */
-  .gradient-border-cyan {
-    border-image: linear-gradient(to right, #4eebff, #00aaff) 1;
-  }
-
-  .gradient-border-purple {
-    border-image: linear-gradient(to right, #00aaff, #8a2be2) 1;
-  }
-
-  /* Range slider styles */
-  .range-slider::-webkit-slider-thumb {
-    appearance: none;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: #4eebff;
-    cursor: pointer;
-    box-shadow: 0 0 10px rgba(78, 235, 255, 0.5), 0 0 20px rgba(78, 235, 255, 0.3);
-    transition: all 0.2s ease;
-  }
-
-  .range-slider::-webkit-slider-thumb:hover {
-    background: #00aaff;
-    box-shadow: 0 0 15px rgba(78, 235, 255, 0.7), 0 0 30px rgba(78, 235, 255, 0.5);
-    transform: scale(1.2);
-  }
-
-  .range-slider::-moz-range-thumb {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: #4eebff;
-    cursor: pointer;
-    border: none;
-    box-shadow: 0 0 10px rgba(78, 235, 255, 0.5), 0 0 20px rgba(78, 235, 255, 0.3);
-    transition: all 0.2s ease;
-  }
-
-  .range-slider::-moz-range-thumb:hover {
-    background: #00aaff;
-    box-shadow: 0 0 15px rgba(78, 235, 255, 0.7), 0 0 30px rgba(78, 235, 255, 0.5);
-    transform: scale(1.2);
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
   }
 }
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
+}
+
 

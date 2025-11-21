@@ -22,14 +22,14 @@ export default function Navbar() {
             className="flex items-center gap-3"
           >
             <Image
-              src="/Synapsify Logo 512.png"
-              alt="Synapsify Logo"
+              src="/cortx-logo.png"
+              alt="Cortx Logo"
               width={32}
               height={32}
               className="w-8 h-8"
             />
             <span className="text-2xl font-bold gradient-text-cyan">
-              Synapsify
+              Cortx
             </span>
           </motion.div>
           <MagneticButton
