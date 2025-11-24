@@ -2,11 +2,56 @@
 
 This document provides Bitvise SSH Client workflows specifically for deploying and managing the Synapsify-Web Next.js application.
 
+## ⭐ Recommended Workflow (New!)
+
+**🎯 Use the automated git-based deployment script for best results!**
+
+See [`GIT_WORKFLOW.md`](./GIT_WORKFLOW.md) for complete details.
+
+### Quick Deploy from Local Changes
+
+```powershell
+# Simple one-command deployment
+.\deploy-from-local.ps1
+```
+
+This script automatically:
+1. ✓ Checks for uncommitted changes
+2. ✓ Commits and pushes to GitHub
+3. ✓ Pulls changes on server via Bitvise
+4. ✓ Installs dependencies and builds
+5. ✓ Restarts PM2 service
+
+**Benefits:**
+- Full version control tracking
+- Easy rollbacks via git
+- Enforces best practices
+- Complete audit trail
+
+### Utility Scripts
+
+```powershell
+# Check server status
+.\check-status.ps1
+
+# View application logs
+.\view-logs.ps1              # Last 50 lines
+.\view-logs.ps1 -Follow      # Real-time
+.\view-logs.ps1 -ErrorOnly   # Errors only
+```
+
+---
+
+## Manual Bitvise Commands (Advanced)
+
+For advanced users who need direct control via Bitvise commands:
+
 ## Prerequisites
 
 - Bitvise SSH Client installed
 - `synapsify.tlp` profile file in project root
 - Server access: `104.237.6.152` (root user)
+- GitHub PAT configured on server (already set up)
 
 ## Available Bitvise Tools
 
@@ -67,9 +112,22 @@ cd C:\Synapsify-Web
 
 ## Deployment Workflows
 
-### Deploying Code Changes
+### ⭐ Recommended: Automated Script
 
-#### Option 1: Git Pull (Recommended)
+**Use this for 99% of deployments:**
+
+```powershell
+# One command to rule them all!
+.\deploy-from-local.ps1
+```
+
+See [`GIT_WORKFLOW.md`](./GIT_WORKFLOW.md) for details.
+
+---
+
+### Manual Deployment (When You Need Direct Control)
+
+#### Option 1: Git Pull Deployment (Manual)
 
 ```powershell
 # Navigate to project root
