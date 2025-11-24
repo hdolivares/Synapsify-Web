@@ -321,149 +321,84 @@ export default function BugInvaders({ mode = 'arcade', onGateWin }: BugInvadersP
     }
 
     // Render simplified view for Gate Mode
-    const GameContent = () => (
-        <div className="relative aspect-[4/3] bg-[#0a0f1e] rounded-xl overflow-hidden border border-white/10 shadow-2xl mx-auto max-w-4xl">
-            <canvas
-                ref={canvasRef}
-                width={800}
-                height={600}
-                className="w-full h-full object-contain"
-            />
-
-            {/* UI Overlays */}
-            {gameState.isPlaying && (
-                <div className="absolute top-4 left-4 right-4 flex justify-between text-white font-mono z-10">
-                    <div className="text-xl">
-                        {mode === 'gate' ? (
-                            <span className="text-[#4eebff] font-bold">BUGS: {bugsKilledRef.current}/{WIN_CONDITION}</span>
-                        ) : (
-                            <span className="text-[#4eebff] font-bold">SCORE: {gameState.score}</span>
-                        )}
-                    </div>
-                    <div className="text-xl">
-                        <span className="text-red-400 font-bold">LIVES: {'❤️'.repeat(gameState.lives)}</span>
-                    </div>
-                </div>
-            )}
-
-            <AnimatePresence>
-                {!gameState.isPlaying && !gameState.isGameOver && !gameState.won && (
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        className="absolute inset-0 flex flex-col items-center justify-center bg-black/80 backdrop-blur-sm z-20"
-                    >
-                        <h3 className="text-4xl font-bold text-white mb-8">DEBUG THE CODE!</h3>
-                        {mode === 'gate' && (
-                            <p className="text-accent-blue mb-6 text-lg">Destroy {WIN_CONDITION} bugs to unlock access</p>
-                        )}
-                        <button
-                            onClick={startGame}
-                            className="px-8 py-4 bg-primary hover:bg-primary/80 text-white rounded-full font-bold text-xl flex items-center gap-3 transition-all hover:scale-105"
-                        >
-                            <Play className="w-6 h-6" /> START MISSION
-                        </button>
-                        <p className="mt-4 text-gray-400">Use Arrow Keys to Move • Space to Shoot</p>
-                    </motion.div>
-                )}
-
-                {gameState.isGameOver && (
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        className="absolute inset-0 flex flex-col items-center justify-center bg-red-900/80 backdrop-blur-sm z-20"
-                    >
-                        <h3 className="text-4xl font-bold text-white mb-4">SYSTEM FAILURE</h3>
-                        <p className="text-xl text-white/80 mb-8">Bugs Destroyed: {bugsKilledRef.current}</p>
-                        <button
-                            onClick={startGame}
-                            className="px-8 py-4 bg-white text-red-900 hover:bg-gray-200 rounded-full font-bold text-xl flex items-center gap-3 transition-all hover:scale-105"
-                        >
-                            <RotateCcw className="w-6 h-6" /> TRY AGAIN
-                        </button>
-                    </motion.div>
-                )}
-
-                {gameState.won && mode === 'arcade' && (
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        className="absolute inset-0 flex flex-col items-center justify-center bg-green-900/80 backdrop-blur-sm z-20"
-                    >
-                        <Trophy className="w-20 h-20 text-yellow-400 mb-6 animate-bounce" />
-                        <h3 className="text-4xl font-bold text-white mb-4">SYSTEM CLEAN</h3>
-                        <p className="text-xl text-white/80 mb-8">Score: {gameState.score}</p>
-
-                        {!submitted ? (
-                            <div className="bg-black/50 p-6 rounded-xl max-w-md w-full mx-4">
-                                <h4 className="text-xl font-bold text-white mb-4">Submit Score to Leaderboard</h4>
-
-                                {user ? (
-                                    <div className="mb-4 text-green-400 text-sm">
-                                        Signed in as {user.email}
-                                    </div>
-                                ) : (
-                                    <div className="mb-4 text-yellow-400 text-sm flex items-center justify-center gap-2">
-                                        <Lock className="w-4 h-4" /> Login required to submit score
-                                    </div>
-                                )}
-
-                                <button
-                                    onClick={submitScore}
-                                    disabled={submitting}
-                                    className={`w-full py-3 rounded font-bold transition-colors flex items-center justify-center gap-2 ${user
-                                        ? 'bg-green-500 hover:bg-green-400 text-white'
-                                        : 'bg-primary hover:bg-primary/90 text-white'
-                                        }`}
-                                >
-                                    {submitting ? (
-                                        <Loader2 className="w-5 h-5 animate-spin" />
-                                    ) : user ? (
-                                        'SUBMIT SCORE'
-                                    ) : (
-                                        'LOGIN TO SUBMIT'
-                                    )}
-                                </button>
-                            </div>
-                        ) : (
-                            <div className="text-center">
-                                <p className="text-green-400 font-bold text-xl mb-6">Score Submitted!</p>
-                                <button
-                                    onClick={startGame}
-                                    className="px-8 py-3 bg-white/10 hover:bg-white/20 text-white rounded-full font-bold flex items-center gap-2 mx-auto"
-                                >
-                                    <RotateCcw className="w-5 h-5" /> Play Again
-                                </button>
-                            </div>
-                        )}
-                    </motion.div>
-                )}
-
-                {gameState.won && mode === 'gate' && (
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        className="absolute inset-0 flex flex-col items-center justify-center bg-green-900/90 backdrop-blur-sm z-20"
-                    >
-                        <Trophy className="w-20 h-20 text-yellow-400 mb-6 animate-bounce" />
-                        <h3 className="text-4xl font-bold text-white mb-2">ACCESS GRANTED</h3>
-                        <p className="text-xl text-white/80 mb-8">All Bugs Eliminated!</p>
-                        <div className="flex items-center gap-2 text-accent-blue animate-pulse">
-                            Proceeding to registration <ArrowRight className="w-5 h-5" />
-                        </div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
-        </div>
-    )
-
-    // If Gate mode, just return the game content
     if (mode === 'gate') {
-        return <GameContent />
+        return (
+            <div className="relative aspect-[4/3] bg-[#0a0f1e] rounded-xl overflow-hidden border border-white/10 shadow-2xl mx-auto max-w-4xl">
+                <canvas
+                    ref={canvasRef}
+                    width={800}
+                    height={600}
+                    className="w-full h-full object-contain"
+                />
+
+                {/* UI Overlays */}
+                {gameState.isPlaying && (
+                    <div className="absolute top-4 left-4 right-4 flex justify-between text-white font-mono z-10">
+                        <div className="text-xl">
+                            <span className="text-[#4eebff] font-bold">BUGS: {bugsKilledRef.current}/{WIN_CONDITION}</span>
+                        </div>
+                        <div className="text-xl">
+                            <span className="text-red-400 font-bold">LIVES: {'❤️'.repeat(gameState.lives)}</span>
+                        </div>
+                    </div>
+                )}
+
+                <AnimatePresence>
+                    {!gameState.isPlaying && !gameState.isGameOver && !gameState.won && (
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            className="absolute inset-0 flex flex-col items-center justify-center bg-black/80 backdrop-blur-sm z-20"
+                        >
+                            <h3 className="text-4xl font-bold text-white mb-8">DEBUG THE CODE!</h3>
+                            <p className="text-accent-blue mb-6 text-lg">Destroy {WIN_CONDITION} bugs to unlock access</p>
+                            <button
+                                onClick={startGame}
+                                className="px-8 py-4 bg-primary hover:bg-primary/80 text-white rounded-full font-bold text-xl flex items-center gap-3 transition-all hover:scale-105"
+                            >
+                                <Play className="w-6 h-6" /> START MISSION
+                            </button>
+                            <p className="mt-4 text-gray-400">Use Arrow Keys to Move • Space to Shoot</p>
+                        </motion.div>
+                    )}
+
+                    {gameState.isGameOver && (
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            className="absolute inset-0 flex flex-col items-center justify-center bg-red-900/80 backdrop-blur-sm z-20"
+                        >
+                            <h3 className="text-4xl font-bold text-white mb-4">SYSTEM FAILURE</h3>
+                            <p className="text-xl text-white/80 mb-8">Bugs Destroyed: {bugsKilledRef.current}</p>
+                            <button
+                                onClick={startGame}
+                                className="px-8 py-4 bg-white text-red-900 hover:bg-gray-200 rounded-full font-bold text-xl flex items-center gap-3 transition-all hover:scale-105"
+                            >
+                                <RotateCcw className="w-6 h-6" /> TRY AGAIN
+                            </button>
+                        </motion.div>
+                    )}
+
+                    {gameState.won && (
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            className="absolute inset-0 flex flex-col items-center justify-center bg-green-900/90 backdrop-blur-sm z-20"
+                        >
+                            <Trophy className="w-20 h-20 text-yellow-400 mb-6 animate-bounce" />
+                            <h3 className="text-4xl font-bold text-white mb-2">ACCESS GRANTED</h3>
+                            <p className="text-xl text-white/80 mb-8">All Bugs Eliminated!</p>
+                            <div className="flex items-center gap-2 text-accent-blue animate-pulse">
+                                Proceeding to registration <ArrowRight className="w-5 h-5" />
+                            </div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+            </div>
+        )
     }
 
     // Arcade Mode (Full Section)
@@ -486,7 +421,120 @@ export default function BugInvaders({ mode = 'arcade', onGateWin }: BugInvadersP
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
                     <div className="lg:col-span-2">
-                        <GameContent />
+                        <div className="relative aspect-[4/3] bg-[#0a0f1e] rounded-xl overflow-hidden border border-white/10 shadow-2xl mx-auto max-w-4xl">
+                            <canvas
+                                ref={canvasRef}
+                                width={800}
+                                height={600}
+                                className="w-full h-full object-contain"
+                            />
+
+                            {/* UI Overlays */}
+                            {gameState.isPlaying && (
+                                <div className="absolute top-4 left-4 right-4 flex justify-between text-white font-mono z-10">
+                                    <div className="text-xl">
+                                        <span className="text-[#4eebff] font-bold">SCORE: {gameState.score}</span>
+                                    </div>
+                                    <div className="text-xl">
+                                        <span className="text-red-400 font-bold">LIVES: {'❤️'.repeat(gameState.lives)}</span>
+                                    </div>
+                                </div>
+                            )}
+
+                            <AnimatePresence>
+                                {!gameState.isPlaying && !gameState.isGameOver && !gameState.won && (
+                                    <motion.div
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        exit={{ opacity: 0 }}
+                                        className="absolute inset-0 flex flex-col items-center justify-center bg-black/80 backdrop-blur-sm z-20"
+                                    >
+                                        <h3 className="text-4xl font-bold text-white mb-8">DEBUG THE CODE!</h3>
+                                        <button
+                                            onClick={startGame}
+                                            className="px-8 py-4 bg-primary hover:bg-primary/80 text-white rounded-full font-bold text-xl flex items-center gap-3 transition-all hover:scale-105"
+                                        >
+                                            <Play className="w-6 h-6" /> START MISSION
+                                        </button>
+                                        <p className="mt-4 text-gray-400">Use Arrow Keys to Move • Space to Shoot</p>
+                                    </motion.div>
+                                )}
+
+                                {gameState.isGameOver && (
+                                    <motion.div
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        exit={{ opacity: 0 }}
+                                        className="absolute inset-0 flex flex-col items-center justify-center bg-red-900/80 backdrop-blur-sm z-20"
+                                    >
+                                        <h3 className="text-4xl font-bold text-white mb-4">SYSTEM FAILURE</h3>
+                                        <p className="text-xl text-white/80 mb-8">Score: {gameState.score}</p>
+                                        <button
+                                            onClick={startGame}
+                                            className="px-8 py-4 bg-white text-red-900 hover:bg-gray-200 rounded-full font-bold text-xl flex items-center gap-3 transition-all hover:scale-105"
+                                        >
+                                            <RotateCcw className="w-6 h-6" /> TRY AGAIN
+                                        </button>
+                                    </motion.div>
+                                )}
+
+                                {gameState.won && (
+                                    <motion.div
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        exit={{ opacity: 0 }}
+                                        className="absolute inset-0 flex flex-col items-center justify-center bg-green-900/80 backdrop-blur-sm z-20"
+                                    >
+                                        <Trophy className="w-20 h-20 text-yellow-400 mb-6 animate-bounce" />
+                                        <h3 className="text-4xl font-bold text-white mb-4">SYSTEM CLEAN</h3>
+                                        <p className="text-xl text-white/80 mb-8">Score: {gameState.score}</p>
+
+                                        {!submitted ? (
+                                            <div className="bg-black/50 p-6 rounded-xl max-w-md w-full mx-4">
+                                                <h4 className="text-xl font-bold text-white mb-4">Submit Score to Leaderboard</h4>
+
+                                                {user ? (
+                                                    <div className="mb-4 text-green-400 text-sm">
+                                                        Signed in as {user.email}
+                                                    </div>
+                                                ) : (
+                                                    <div className="mb-4 text-yellow-400 text-sm flex items-center justify-center gap-2">
+                                                        <Lock className="w-4 h-4" /> Login required to submit score
+                                                    </div>
+                                                )}
+
+                                                <button
+                                                    onClick={submitScore}
+                                                    disabled={submitting}
+                                                    className={`w-full py-3 rounded font-bold transition-colors flex items-center justify-center gap-2 ${user
+                                                        ? 'bg-green-500 hover:bg-green-400 text-white'
+                                                        : 'bg-primary hover:bg-primary/90 text-white'
+                                                        }`}
+                                                >
+                                                    {submitting ? (
+                                                        <Loader2 className="w-5 h-5 animate-spin" />
+                                                    ) : user ? (
+                                                        'SUBMIT SCORE'
+                                                    ) : (
+                                                        'LOGIN TO SUBMIT'
+                                                    )}
+                                                </button>
+                                            </div>
+                                        ) : (
+                                            <div className="text-center">
+                                                <p className="text-green-400 font-bold text-xl mb-6">Score Submitted!</p>
+                                                <button
+                                                    onClick={startGame}
+                                                    className="px-8 py-3 bg-white/10 hover:bg-white/20 text-white rounded-full font-bold flex items-center gap-2 mx-auto"
+                                                >
+                                                    <RotateCcw className="w-5 h-5" /> Play Again
+                                                </button>
+                                            </div>
+                                        )}
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+                        </div>
                     </div>
 
                     {/* Leaderboard Sidebar */}

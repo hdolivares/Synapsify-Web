@@ -1,30 +1,32 @@
-# Check Server Status Script
-# Run this to check the status of your Synapsify-Web deployment
+# Check Server Status
+# Quick script to check the status of the deployed application
 
-$profile = ".\synapsify.tlp"
-$bitvisePath = "C:\Program Files (x86)\Bitvise SSH Client\sexec.exe"
-
-Write-Host "📊 Synapsify-Web Server Status" -ForegroundColor Cyan
-Write-Host "===============================" -ForegroundColor Cyan
+Write-Host "=====================================" -ForegroundColor Cyan
+Write-Host "  Server Status Check               " -ForegroundColor Cyan
+Write-Host "=====================================" -ForegroundColor Cyan
 Write-Host ""
 
-# Check PM2 status
-Write-Host "PM2 Status:" -ForegroundColor Yellow
-& $bitvisePath -profile=$profile -cmd="pm2 status"
+# Check PM2 Status
+Write-Host "[PM2 Status]" -ForegroundColor Yellow
+& "C:\Program Files (x86)\Bitvise SSH Client\sexec.exe" `
+    "-profile=C:\Synapsify-Web\synapsify.tlp" `
+    "-cmd=pm2 status"
 
 Write-Host ""
-Write-Host "PM2 Process Info:" -ForegroundColor Yellow
-& $bitvisePath -profile=$profile -cmd="pm2 info synapsify-web"
+
+# Check if app is responding
+Write-Host "[Application Health]" -ForegroundColor Yellow
+& "C:\Program Files (x86)\Bitvise SSH Client\sexec.exe" `
+    "-profile=C:\Synapsify-Web\synapsify.tlp" `
+    "-cmd=curl -s -o /dev/null -w '%{http_code}' http://localhost:3000"
 
 Write-Host ""
-Write-Host "Nginx Status:" -ForegroundColor Yellow
-& $bitvisePath -profile=$profile -cmd="systemctl status nginx --no-pager -l"
+
+# Check nginx status
+Write-Host "[Nginx Status]" -ForegroundColor Yellow
+& "C:\Program Files (x86)\Bitvise SSH Client\sexec.exe" `
+    "-profile=C:\Synapsify-Web\synapsify.tlp" `
+    "-cmd=systemctl status nginx --no-pager"
 
 Write-Host ""
-Write-Host "Port 3000 Check:" -ForegroundColor Yellow
-& $bitvisePath -profile=$profile -cmd="netstat -tlnp | grep 3000 || echo 'Port 3000 not in use'"
-
-Write-Host ""
-Write-Host "Recent Logs (last 20 lines):" -ForegroundColor Yellow
-& $bitvisePath -profile=$profile -cmd="pm2 logs synapsify-web --lines 20 --nostream"
-
+Write-Host "=====================================" -ForegroundColor Cyan

@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X } from 'lucide-react'
 import BugInvaders from './BugInvaders'
@@ -25,7 +26,11 @@ export default function GameGateModal({ isOpen, onClose }: GameGateModalProps) {
         }, 2000)
     }
 
-    return (
+    // Handle mounting for portal
+    const [mounted, setMounted] = useState(false)
+    useEffect(() => setMounted(true), [])
+
+    const modalContent = (
         <AnimatePresence>
             {isOpen && (
                 <>
@@ -34,7 +39,7 @@ export default function GameGateModal({ isOpen, onClose }: GameGateModalProps) {
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         onClick={onClose}
-                        className="fixed inset-0 bg-black/90 backdrop-blur-md z-50"
+                        className="fixed inset-0 bg-black/90 backdrop-blur-md z-[100]"
                     />
 
                     {/* Game Container */}
@@ -43,9 +48,9 @@ export default function GameGateModal({ isOpen, onClose }: GameGateModalProps) {
                             initial={{ opacity: 0, scale: 0.95 }}
                             animate={{ opacity: 1, scale: 1 }}
                             exit={{ opacity: 0, scale: 0.95 }}
-                            className="fixed inset-0 z-50 flex items-center justify-center p-4"
+                            className="fixed inset-0 z-[101] flex items-center justify-center p-4 pointer-events-none"
                         >
-                            <div className="relative w-full max-w-4xl">
+                            <div className="relative w-full max-w-4xl pointer-events-auto">
                                 <button
                                     onClick={onClose}
                                     className="absolute -top-12 right-0 text-gray-400 hover:text-white transition-colors"
@@ -84,4 +89,8 @@ export default function GameGateModal({ isOpen, onClose }: GameGateModalProps) {
             )}
         </AnimatePresence>
     )
+
+    if (!mounted) return null
+    // @ts-ignore - createPortal types can be finicky
+    return import('react-dom').then(mod => mod.createPortal(modalContent, document.body))
 }
