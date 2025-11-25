@@ -59,7 +59,7 @@ export default function BugInvaders({ mode = 'arcade', onGateWin }: BugInvadersP
     const playerHeight = 30
     const bugsRef = useRef<Bug[]>([])
     const bulletsRef = useRef<Bullet[]>([])
-    const animationFrameRef = useRef<number>()
+    const animationFrameRef = useRef<number | undefined>(undefined)
     const bugSpeedRef = useRef(1)
     const bulletSpeedRef = useRef(8)
     const lastBugTimeRef = useRef(0)
@@ -67,12 +67,12 @@ export default function BugInvaders({ mode = 'arcade', onGateWin }: BugInvadersP
     const bugsKilledRef = useRef(0)
 
     useEffect(() => {
-        // Check auth state
-        const checkUser = async () => {
-            const { data: { user } } = await supabase.auth.getUser()
+        // Check auth state - Use .then() instead of async/await to avoid React Promise tracking issues
+        supabase.auth.getUser().then(({ data: { user } }) => {
             setUser(user)
-        }
-        checkUser()
+        }).catch(() => {
+            setUser(null)
+        })
 
         const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
             setUser(session?.user ?? null)

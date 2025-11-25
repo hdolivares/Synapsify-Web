@@ -35,7 +35,7 @@ export default function DebugTheCodeGame({ onWin, onLose }: GameProps) {
   const bugsRef = useRef<Bug[]>([])
   const bulletsRef = useRef<Bullet[]>([])
   const moveDirectionRef = useRef(1) // 1 for right, -1 for left
-  const animationFrameRef = useRef<number>()
+  const animationFrameRef = useRef<number | undefined>(undefined)
   const bugSpeedRef = useRef(1)
   const bulletSpeedRef = useRef(8)
   const lastBugTimeRef = useRef(0)

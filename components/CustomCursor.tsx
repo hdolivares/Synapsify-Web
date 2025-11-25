@@ -4,17 +4,22 @@ import { useEffect, useState, useRef } from 'react'
 import { motion, useMotionValue, useSpring } from 'framer-motion'
 
 export default function CustomCursor() {
+  const [mounted, setMounted] = useState(false)
   const x = useMotionValue(0)
   const y = useMotionValue(0)
   const [isHovering, setIsHovering] = useState(false)
-  const rafRef = useRef<number>()
+  const rafRef = useRef<number | undefined>(undefined)
 
   // Smooth spring for cursor movement - optimized for responsiveness
   const springX = useSpring(x, { stiffness: 600, damping: 40, mass: 0.1 })
   const springY = useSpring(y, { stiffness: 600, damping: 40, mass: 0.1 })
 
   useEffect(() => {
-    if (typeof window === 'undefined') return
+    setMounted(true)
+  }, [])
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || !mounted) return
 
     const updateMousePosition = (e: MouseEvent) => {
       // Use requestAnimationFrame for smoother updates
@@ -59,7 +64,9 @@ export default function CustomCursor() {
         el.removeEventListener('mouseleave', handleMouseLeave)
       })
     }
-  }, [x, y])
+  }, [x, y, mounted])
+
+  if (!mounted) return null
 
   return (
     <>

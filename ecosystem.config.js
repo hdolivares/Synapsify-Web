@@ -7,12 +7,12 @@ module.exports = {
       name: 'synapsify-web',
       script: 'npm',
       args: 'start',
-      cwd: '/root/synapsify-web', // Update this path to your project location
+      cwd: '/home/synapsify.app/synapsify-web',
       instances: 1,
       exec_mode: 'fork',
       env: {
         NODE_ENV: 'production',
-        PORT: 3000,
+        PORT: 3001,
       },
       error_file: './logs/err.log',
       out_file: './logs/out.log',

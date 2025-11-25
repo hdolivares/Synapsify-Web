@@ -2,6 +2,168 @@
 
 This document provides Bitvise SSH Client workflows specifically for deploying and managing the Synapsify-Web Next.js application.
 
+## Current Production Configuration (synapsify.app)
+
+**Last Updated:** November 25, 2025
+
+### Architecture
+- **Web Server:** OpenLiteSpeed (via CyberPanel)
+- **Application Server:** Next.js running on port 3001 via PM2
+- **Proxy Configuration:** OpenLiteSpeed extprocessor proxy
+- **Domain:** synapsify.app (with SSL via Let's Encrypt)
+
+### Key Configuration Details
+
+**OpenLiteSpeed Virtual Host (`/usr/local/lsws/conf/vhosts/synapsify.app/vhost.conf`):**
+```
+extprocessor nextjs {
+  type                    proxy
+  address                 127.0.0.1:3001
+  maxConns                300
+  initTimeout             60
+  retryTimeout            60
+  respBuffer              1
+}
+
+context / {
+  type                    proxy
+  handler                 nextjs
+  addDefaultCharset       off
+}
+```
+
+**PM2 Configuration:**
+- **Name:** synapsify-web
+- **Port:** 3001 (to avoid conflict with nghttpx on port 3000)
+- **Location:** `/home/synapsify.app/synapsify-web`
+- **Start Command:** `npm start` (which runs `next start -p 3001`)
+
+**Important Notes:**
+- ⚠️ **Wait 10-15 seconds after restarting OpenLiteSpeed** for proxy configuration to fully load
+- The proxy context must come BEFORE `scripthandler` in the vhost.conf
+- synapsify.app must be mapped in OpenLiteSpeed's listener configuration
+- SSL certificates are managed via CyberPanel/Let's Encrypt
+
+**Deployment Path:**
+- Project directory: `/home/synapsify.app/synapsify-web`
+- Build output: `/home/synapsify.app/synapsify-web/.next`
+- PM2 logs: `/home/synapsify.app/synapsify-web/logs/`
+
+**Testing:**
+```powershell
+# Test with correct Host header (required for virtual host matching)
+& "C:\Program Files (x86)\Bitvise SSH Client\sexec.exe" "-profile=.\synapsify.tlp" -cmd="curl -H 'Host: synapsify.app' http://127.0.0.1"
+```
+
+## ⚠️ CRITICAL: Testing Before Deployment
+
+**ALWAYS test locally before deploying to VPS!** This prevents errors from reaching production.
+
+### Step 1: Build and Test Locally (REQUIRED)
+
+```powershell
+# 1. Build the project
+npm run build
+
+# 2. Start production server (matches VPS environment)
+npm start
+# Server runs on port 3001
+
+# 3. Test in browser
+# Open http://localhost:3001 in your browser
+# Open DevTools (F12) → Console tab
+# Check for ANY errors (especially React errors)
+```
+
+**What to Check:**
+- ✅ Build succeeds without errors
+- ✅ Page loads correctly
+- ✅ **NO console errors** (check DevTools Console tab)
+- ✅ No React Error #482 (hydration mismatch)
+- ✅ No "Application error" messages
+- ✅ All components render correctly
+
+### Step 2: Test Dev Build for Detailed Errors
+
+```powershell
+# Start dev server (shows full error messages)
+npm run dev
+# Server runs on port 3020
+
+# Open http://localhost:3020 in browser
+# Check console for detailed error messages
+```
+
+**Why Test Dev Build:**
+- Shows **full error messages** (not minified)
+- Easier to debug issues
+- Catches TypeScript errors
+- Shows React hydration warnings in detail
+
+### Step 3: Use Browser DevTools
+
+**Essential Checks:**
+1. **Console Tab:**
+   - Look for red errors
+   - Check for React Error #482
+   - Check for async/await errors
+   - Check for hydration mismatches
+
+2. **React DevTools (if installed):**
+   - Components tab (not Profiler)
+   - Look for yellow warning badges
+   - Check for "Hydration failed" messages
+
+3. **Network Tab:**
+   - Verify all assets load (200 status)
+   - Check for 404 errors (especially favicon.ico)
+
+### Common Errors to Catch Before Deployment
+
+**1. React Error #482 (Hydration Mismatch)**
+- **Cause:** Server/client HTML differs
+- **Fix:** Ensure components render consistently
+- **Test:** Check console in production build
+
+**2. Async Client Component Error**
+- **Cause:** Client component returns Promise
+- **Fix:** Use synchronous code or .then() chains
+- **Test:** Check dev build console
+
+**3. TypeScript Errors**
+- **Cause:** Type mismatches (especially with React 19)
+- **Fix:** Update types, add initial values to useRef
+- **Test:** Build will fail if errors exist
+
+**4. Missing Dependencies**
+- **Cause:** New packages not installed
+- **Fix:** Run `npm install` before building
+- **Test:** Build will fail if missing
+
+### Testing Checklist
+
+Before deploying, verify:
+- [ ] `npm run build` succeeds
+- [ ] `npm start` runs without errors
+- [ ] Page loads at http://localhost:3001
+- [ ] **Browser console is empty** (no errors)
+- [ ] No React hydration errors
+- [ ] All interactive elements work
+- [ ] Animations work smoothly
+- [ ] Tested in regular browser (Chrome/Firefox)
+- [ ] Tested in incognito mode (rule out extensions)
+
+### Why This Matters
+
+**Lessons Learned:**
+- ❌ **Don't skip local testing** - Errors will appear on VPS
+- ❌ **Don't rely on build success alone** - Runtime errors exist
+- ✅ **Always check browser console** - Errors hide there
+- ✅ **Test production build** - Matches VPS environment
+- ✅ **Test dev build** - Shows detailed errors
+
+**The Rule:** If it doesn't work locally, it won't work on the VPS!
+
 ## ⭐ Recommended Workflow (New!)
 
 **🎯 Use the automated git-based deployment script for best results!**

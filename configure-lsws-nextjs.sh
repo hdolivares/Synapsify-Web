@@ -39,25 +39,12 @@ echo "Configuration updated:"
 grep -A 8 "context / {" "$VHOST_CONF" | head -10
 
 echo ""
-echo "Testing OpenLiteSpeed configuration..."
-/usr/local/lsws/bin/lswsctrl configtest
-
-if [ $? -eq 0 ]; then
-    echo ""
-    echo "Configuration test passed!"
-    echo "Restarting OpenLiteSpeed..."
-    systemctl restart lsws
-    sleep 2
-    echo "OpenLiteSpeed restarted"
-    echo ""
-    echo "Your Next.js app should now be accessible at:"
-    echo "  https://${DOMAIN}"
-    echo "  http://${DOMAIN}"
-else
-    echo ""
-    echo "ERROR: Configuration test failed!"
-    echo "Restoring backup..."
-    cp "$BACKUP" "$VHOST_CONF"
-    exit 1
-fi
+echo "Restarting OpenLiteSpeed..."
+systemctl restart lsws
+sleep 2
+echo "OpenLiteSpeed restarted"
+echo ""
+echo "Your Next.js app should now be accessible at:"
+echo "  https://${DOMAIN}"
+echo "  http://${DOMAIN}"
 

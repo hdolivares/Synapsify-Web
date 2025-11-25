@@ -4,11 +4,17 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useEffect } from 'react'
 
 export default function Preloader() {
+    const [mounted, setMounted] = useState(false)
     const [isLoading, setIsLoading] = useState(true)
     const [progress, setProgress] = useState(0)
     const [status, setStatus] = useState('Initializing Core Systems...')
 
     useEffect(() => {
+        setMounted(true)
+    }, [])
+
+    useEffect(() => {
+        if (!mounted) return
         const timer = setInterval(() => {
             setProgress(prev => {
                 if (prev >= 100) {
@@ -32,7 +38,9 @@ export default function Preloader() {
         }, 150)
 
         return () => clearInterval(timer)
-    }, [])
+    }, [mounted])
+
+    if (!mounted) return null
 
     return (
         <AnimatePresence>

@@ -9,23 +9,31 @@ import GameGateModal from './GameGateModal'
 import { supabase } from '@/lib/supabaseClient'
 
 export default function WaitlistSection() {
+    const [mounted, setMounted] = useState(false)
     const [user, setUser] = useState<any>(null)
     const [showGameGate, setShowGameGate] = useState(false)
     const [showAuth, setShowAuth] = useState(false) // Keep for direct login if needed
 
     useEffect(() => {
-        const checkUser = async () => {
-            const { data: { user } } = await supabase.auth.getUser()
+        setMounted(true)
+    }, [])
+
+    useEffect(() => {
+        if (!mounted) return
+        
+        // Use .then() instead of async/await to avoid React Promise tracking issues
+        supabase.auth.getUser().then(({ data: { user } }) => {
             setUser(user)
-        }
-        checkUser()
+        }).catch(() => {
+            setUser(null)
+        })
 
         const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
             setUser(session?.user ?? null)
         })
 
         return () => subscription.unsubscribe()
-    }, [])
+    }, [mounted])
 
     return (
         <section className="py-24 relative overflow-hidden" id="waitlist">
@@ -53,7 +61,7 @@ export default function WaitlistSection() {
                             Prove your skills in the system to secure your spot.
                         </p>
 
-                        {user ? (
+                        {mounted && user ? (
                             <div className="flex flex-col items-center gap-4">
                                 <div className="flex items-center gap-2 text-green-400 bg-green-400/10 px-6 py-3 rounded-full border border-green-400/20">
                                     <CheckCircle2 className="w-5 h-5" />

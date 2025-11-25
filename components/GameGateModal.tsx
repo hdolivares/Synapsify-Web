@@ -91,6 +91,7 @@ export default function GameGateModal({ isOpen, onClose }: GameGateModalProps) {
     )
 
     if (!mounted) return null
-    // @ts-ignore - createPortal types can be finicky
-    return import('react-dom').then(mod => mod.createPortal(modalContent, document.body))
+    
+    // Use createPortal synchronously - react-dom is already imported at the top
+    return createPortal(modalContent, document.body)
 }

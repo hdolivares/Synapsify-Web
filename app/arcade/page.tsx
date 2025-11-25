@@ -14,15 +14,16 @@ export default function ArcadePage() {
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        const checkAuth = async () => {
-            const { data: { session } } = await supabase.auth.getSession()
+        // Use .then() instead of async/await to avoid React Promise tracking issues
+        supabase.auth.getSession().then(({ data: { session } }) => {
             if (!session) {
                 router.push('/')
             } else {
                 setLoading(false)
             }
-        }
-        checkAuth()
+        }).catch(() => {
+            router.push('/')
+        })
     }, [router])
 
     if (loading) {

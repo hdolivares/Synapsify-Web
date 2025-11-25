@@ -16,7 +16,30 @@ export default function Leaderboard() {
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        fetchScores()
+        // Use .then() instead of async/await to avoid React Promise tracking issues
+        // Convert Supabase PromiseLike to Promise
+        const query = supabase
+            .from('leaderboard')
+            .select('*')
+            .order('score', { ascending: false })
+            .limit(10)
+        
+        // Convert PromiseLike to Promise
+        const promise: Promise<any> = Promise.resolve(query as any)
+        
+        promise.then((result: any) => {
+            const { data, error } = result
+            if (error) {
+                console.error('Error fetching scores:', error)
+                setLoading(false)
+                return
+            }
+            if (data) setScores(data)
+            setLoading(false)
+        }).catch((error) => {
+            console.error('Error fetching scores:', error)
+            setLoading(false)
+        })
 
         // Subscribe to realtime changes
         const channel = supabase
@@ -30,23 +53,6 @@ export default function Leaderboard() {
             supabase.removeChannel(channel)
         }
     }, [])
-
-    const fetchScores = async () => {
-        try {
-            const { data, error } = await supabase
-                .from('leaderboard')
-                .select('*')
-                .order('score', { ascending: false })
-                .limit(10)
-
-            if (error) throw error
-            if (data) setScores(data)
-        } catch (error) {
-            console.error('Error fetching scores:', error)
-        } finally {
-            setLoading(false)
-        }
-    }
 
     return (
         <div className="glass-panel p-6 rounded-xl border border-white/10">
