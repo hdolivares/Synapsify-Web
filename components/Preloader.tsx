@@ -76,7 +76,7 @@ export default function Preloader() {
                         transition={{ repeat: Infinity, duration: 2 }}
                         className="absolute bottom-10 left-10 text-xs text-white/30"
                     >
-                        SYSTEM_ID: CORTX_V1.0
+                        SYSTEM_ID: SYNAPSIFY_V1.0
                     </motion.div>
                 </motion.div>
             )}

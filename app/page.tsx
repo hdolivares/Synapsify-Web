@@ -24,7 +24,7 @@ export default function Home() {
       <TechSpecs />
       <WaitlistSection />
       <footer className="py-8 text-center text-foreground-secondary text-sm border-t border-white/5">
-        <p>© 2025 Cortx. All rights reserved.</p>
+        <p>© 2025 Synapsify. All rights reserved.</p>
       </footer>
     </main>
   )

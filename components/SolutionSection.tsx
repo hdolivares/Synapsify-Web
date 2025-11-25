@@ -46,7 +46,7 @@ export default function SolutionSection() {
                                 <div>
                                     <h3 className="text-xl font-bold mb-2">Shared Knowledge</h3>
                                     <p className="text-foreground-secondary">
-                                        Remote teams need shared tools. Cortx acts as a centralized knowledge base,
+                                        Remote teams need shared tools. Synapsify acts as a centralized knowledge base,
                                         helping onboard new developers faster by explaining project-specific patterns.
                                     </p>
                                 </div>
@@ -66,7 +66,7 @@ export default function SolutionSection() {
                                 <Zap className="w-16 h-16 text-yellow-400 mb-6 animate-pulse" />
                                 <h3 className="text-3xl font-bold mb-2">Quality + Velocity</h3>
                                 <p className="text-foreground-secondary max-w-md">
-                                    Studios seek velocity without sacrificing quality. Cortx delivers both by integrating directly into your workflow.
+                                    Studios seek velocity without sacrificing quality. Synapsify delivers both by integrating directly into your workflow.
                                 </p>
                             </div>
                         </div>

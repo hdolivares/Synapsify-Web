@@ -19,10 +19,10 @@ const spaceGrotesk = Space_Grotesk({
 })
 
 export const metadata: Metadata = {
-  title: 'Cortx - Cursor for Game Development',
-  description: 'Cortx is an AI co-developer that lives in your editor. Build faster. Learn faster. Ship better.',
+  title: 'Synapsify - Cursor for Game Development',
+  description: 'Synapsify is an AI co-developer that lives in your editor. Build faster. Learn faster. Ship better.',
   icons: {
-    icon: '/cortx-logo.png',
+    icon: '/Synapsify Logo 512.png',
   },
 }
 

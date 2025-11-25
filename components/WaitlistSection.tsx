@@ -57,7 +57,7 @@ export default function WaitlistSection() {
                             Ready to <span className="text-glow text-primary">Upgrade</span> Your Workflow?
                         </h2>
                         <p className="text-xl text-foreground-secondary mb-10 max-w-2xl mx-auto">
-                            Join the waitlist to get early access to Cortx.
+                            Join the waitlist to get early access to Synapsify.
                             Prove your skills in the system to secure your spot.
                         </p>
 

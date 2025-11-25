@@ -75,7 +75,7 @@ export default function InteractiveDemo() {
                                     <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
                                     <div className="w-3 h-3 rounded-full bg-green-500/80" />
                                 </div>
-                                <span className="text-sm text-gray-400 font-mono">Cortx Editor - BP_InventorySystem</span>
+                                <span className="text-sm text-gray-400 font-mono">Synapsify Editor - BP_InventorySystem</span>
                             </div>
                             <div className="flex items-center gap-4">
                                 <div className="flex items-center gap-2 px-3 py-1 rounded bg-[#333] text-xs text-gray-300">

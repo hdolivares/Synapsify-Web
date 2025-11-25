@@ -42,7 +42,7 @@ export default function SuccessModal({ isOpen, onClose, userEmail }: SuccessModa
                                 </div>
                             </div>
                             <h2 className="text-3xl font-bold mb-2 bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">
-                                Welcome to Cortx! 🎉
+                                Welcome to Synapsify! 🎉
                             </h2>
                             <p className="text-foreground-secondary">
                                 You've proven your skills and secured your spot
@@ -84,7 +84,7 @@ export default function SuccessModal({ isOpen, onClose, userEmail }: SuccessModa
                                         </div>
                                         <div className="flex-1">
                                             <div className="font-bold text-yellow-400 mb-1">1st - 3rd Place</div>
-                                            <div className="text-white font-semibold">1 Year Cortx Ultra FREE</div>
+                                            <div className="text-white font-semibold">1 Year Synapsify Ultra FREE</div>
                                         </div>
                                     </div>
                                 </div>
