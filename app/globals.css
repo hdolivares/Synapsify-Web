@@ -127,6 +127,15 @@ h6 {
     text-wrap: balance;
   }
 
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
   .glass-panel {
     background: rgba(10, 10, 10, 0.6);
     backdrop-filter: blur(12px);
