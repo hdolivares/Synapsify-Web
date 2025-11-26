@@ -164,6 +164,53 @@ Before deploying, verify:
 
 **The Rule:** If it doesn't work locally, it won't work on the VPS!
 
+## 📚 Deployment Lessons Learned
+
+**Last Updated:** November 25, 2025
+
+### Next.js 16 + Turbopack Build Issues
+
+**Issue**: `npm run build` may fail with exit code 1 even when compilation succeeds.
+
+**Symptoms:**
+```
+✓ Compiled successfully in 6.0s
+Running TypeScript ...
+Finalizing page optimization ...
+Exit code: 1
+```
+
+**Root Cause**: Known issue with Next.js 16.0.4 + Turbopack - build appears successful but returns error code.
+
+**Solutions:**
+
+1. **Option 1: PM2 Restart (Recommended)**
+   ```powershell
+   # If build shows "Compiled successfully", just restart PM2
+   & "C:\Program Files (x86)\Bitvise SSH Client\sexec.exe" "-profile=.\synapsify.tlp" "-cmd=cd /home/synapsify.app/synaps ify-web && git pull && pm2 restart synapsify-web"
+   ```
+
+2. **Option 2: Clear Cache and Rebuild**
+   ```powershell
+   & "C:\Program Files (x86)\Bitvise SSH Client\sexec.exe" "-profile=.\synapsify.tlp" "-cmd=cd /home/synapsify.app/synapsify-web && rm -rf .next && npm run build"
+   ```
+
+3. **Option 3: Deploy Without Build** (if local build works)
+   ```powershell   # Pull changes and restart - uses existing .next from previous successful build
+   & "C:\Program Files (x86)\Bitvise SSH Client\sexec.exe" "-profile=.\synapsify.tlp" "-cmd=cd /home/synapsify.app/synapsify-web && git pull && pm2 restart synapsify-web"
+   ```
+
+**Verification Commands:**
+```powershell
+# Check if app is running
+& "C:\Program Files (x86)\Bitvise SSH Client\sexec.exe" "-profile=.\synapsify.tlp" "-cmd=pm2 logs synapsify-web --lines 30 --nostream"
+
+# Test site response
+& "C:\Program Files (x86)\Bitvise SSH Client\sexec.exe" "-profile=.\synapsify.tlp" "-cmd=curl -H 'Host: synapsify.app' http://127.0.0.1 -I"
+```
+
+**Key Takeaway:** PM2 restart alone often works fine when code changes don't require a fresh build. The app can run with the existing .next directory.
+
 ## ⭐ Recommended Workflow (New!)
 
 **🎯 Use the automated git-based deployment script for best results!**

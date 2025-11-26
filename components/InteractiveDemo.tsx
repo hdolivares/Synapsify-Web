@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Terminal, Play, CheckCircle2, Plus, Zap } from 'lucide-react'
 
@@ -17,6 +17,14 @@ export default function InteractiveDemo() {
     const [currentStep, setCurrentStep] = useState(0)
     const [isTyping, setIsTyping] = useState(true)
     const [displayText, setDisplayText] = useState("")
+    const messagesContainerRef = useRef<HTMLDivElement>(null)
+
+    // Auto-scroll messages container to bottom when new messages appear
+    useEffect(() => {
+        if (messagesContainerRef.current) {
+            messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight
+        }
+    }, [currentStep])
 
     useEffect(() => {
         if (currentStep >= steps.length) {
@@ -93,13 +101,17 @@ export default function InteractiveDemo() {
 
                         <div className="grid grid-cols-1 md:grid-cols-3 h-[500px]">
                             {/* Chat Interface */}
-                            <div className="bg-black border-r-2 border-neon-lime p-4 flex flex-col">
-                                <div className="flex-1 space-y-4 overflow-y-auto">
+                            <div className="bg-black border-r-2 border-neon-lime p-4 flex flex-col overflow-hidden">
+                                {/* Messages Container with Fixed Height - DISABLE HORIZONTAL SCROLL */}
+                                <div
+                                    ref={messagesContainerRef}
+                                    className="flex-1 space-y-4 overflow-y-auto overflow-x-hidden max-h-[360px] mb-4 pr-2 custom-scrollbar"
+                                >
                                     {currentStep > 0 && (
                                         <motion.div
                                             initial={{ opacity: 0, x: -20 }}
                                             animate={{ opacity: 1, x: 0 }}
-                                            className="bg-black border-2 border-neon-cyan p-3 max-w-[90%]"
+                                            className="bg-black/90 border-2 border-neon-cyan p-3 max-w-[90%]"
                                         >
                                             <p className="text-sm text-neon-cyan font-mono">{steps[0].text}</p>
                                         </motion.div>
@@ -110,21 +122,22 @@ export default function InteractiveDemo() {
                                             key={idx}
                                             initial={{ opacity: 0, x: 20 }}
                                             animate={{ opacity: 1, x: 0 }}
-                                            className={`p-3 max-w-[90%] ml-auto border-2 ${step.type === 'success' ? 'bg-black border-neon-lime' :
-                                                    step.type === 'done' ? 'bg-black border-neon-cyan' :
-                                                        'bg-black border-foreground-secondary'
+                                            className={`p-3 max-w-[90%] ml-auto border-2 ${step.type === 'success' ? 'bg-black/90 border-neon-lime' :
+                                                step.type === 'done' ? 'bg-black/90 border-neon-cyan' :
+                                                    'bg-black/90 border-foreground-secondary'
                                                 }`}
                                         >
                                             <div className="flex items-center gap-2">
                                                 {step.type === 'success' && <CheckCircle2 className="w-4 h-4 text-neon-lime" />}
                                                 {step.type === 'system' && <Zap className="w-4 h-4 text-neon-cyan" />}
-                                                <p className="text-sm text-foreground font-mono">{step.text}</p>
+                                                <p className="text-sm text-white font-mono">{step.text}</p>
                                             </div>
                                         </motion.div>
                                     ))}
                                 </div>
 
-                                <div className="mt-4 pt-4 border-t-2 border-neon-lime">
+                                {/* Input Box - Always Visible at Bottom */}
+                                <div className="pt-4 border-t-2 border-neon-lime">
                                     <div className="bg-black border-2 border-neon-lime p-3 flex items-center gap-2">
                                         <Terminal className="w-4 h-4 text-neon-lime" />
                                         <span className="text-sm text-neon-lime font-mono">
@@ -142,34 +155,34 @@ export default function InteractiveDemo() {
                                 <AnimatePresence>
                                     {currentStep > 2 && (
                                         <div className="relative z-10 h-full w-full">
-                                            {/* Event Node */}
+                                            {/* Event Node - BeginPlay */}
                                             <motion.div
-                                                initial={{ opacity: 0, scale: 0.8, x: 50, y: 50 }}
-                                                animate={{ opacity: 1, scale: 1, x: 50, y: 50 }}
-                                                className="absolute top-10 left-10 w-48 bg-black border-t-4 border-neon-magenta border-2"
+                                                initial={{ opacity: 0, scale: 0.8, x: 20, y: 30 }}
+                                                animate={{ opacity: 1, scale: 1, x: 20, y: 30 }}
+                                                className="absolute top-6 left-6 w-40 bg-black border-t-4 border-neon-magenta border-2"
                                             >
                                                 <div className="px-3 py-1 bg-black/80 border-b-2 border-neon-magenta flex justify-between items-center">
                                                     <span className="text-xs font-bold text-neon-magenta font-mono">EVENT_BEGINPLAY</span>
                                                     <Zap className="w-3 h-3 text-neon-magenta" />
                                                 </div>
-                                                <div className="p-3 h-20"></div>
+                                                <div className="p-3 h-16"></div>
                                             </motion.div>
 
-                                            {/* Function Node */}
+                                            {/* Function Node - Init Inventory (MOVED CLOSER) */}
                                             <motion.div
-                                                initial={{ opacity: 0, scale: 0.8, x: 300, y: 50 }}
-                                                animate={{ opacity: 1, scale: 1, x: 300, y: 50 }}
+                                                initial={{ opacity: 0, scale: 0.8, x: 200, y: 30 }}
+                                                animate={{ opacity: 1, scale: 1, x: 200, y: 30 }}
                                                 transition={{ delay: 0.5 }}
-                                                className="absolute top-10 left-80 w-48 bg-black border-t-4 border-neon-cyan border-2"
+                                                className="absolute top-6 left-48 w-40 bg-black border-t-4 border-neon-cyan border-2"
                                             >
                                                 <div className="px-3 py-1 bg-black/80 border-b-2 border-neon-cyan flex justify-between items-center">
                                                     <span className="text-xs font-bold text-neon-cyan font-mono">INIT_INVENTORY</span>
                                                     <div className="w-3 h-3 rounded-full border-2 border-neon-cyan" />
                                                 </div>
-                                                <div className="p-3 h-24"></div>
+                                                <div className="p-3 h-20"></div>
                                             </motion.div>
 
-                                            {/* Connection Line */}
+                                            {/* Connection Line - BeginPlay to Init */}
                                             <motion.svg
                                                 initial={{ pathLength: 0, opacity: 0 }}
                                                 animate={{ pathLength: 1, opacity: 1 }}
@@ -177,14 +190,31 @@ export default function InteractiveDemo() {
                                                 className="absolute top-0 left-0 w-full h-full pointer-events-none"
                                             >
                                                 <path
-                                                    d="M 242 85 C 292 85, 292 85, 320 85"
+                                                    d="M 182 80 C 202 80, 202 80, 216 80"
                                                     stroke="#CCFF00"
                                                     strokeWidth="3"
                                                     fill="none"
                                                 />
                                             </motion.svg>
 
-                                            {/* Variable List */}
+                                            {/* AddItem Function Node - NOW VISIBLE */}
+                                            <motion.div
+                                                initial={{ opacity: 0, scale: 0.8, x: 200, y: 140 }}
+                                                animate={{ opacity: 1, scale: 1, x: 200, y: 140 }}
+                                                transition={{ delay: 1.5 }}
+                                                className="absolute top-32 left-48 w-40 bg-black border-t-4 border-neon-magenta border-2"
+                                            >
+                                                <div className="px-3 py-1 bg-black/80 border-b-2 border-neon-magenta flex justify-between items-center">
+                                                    <span className="text-xs font-bold text-neon-magenta font-mono">ADD_ITEM</span>
+                                                    <Plus className="w-3 h-3 text-neon-magenta" />
+                                                </div>
+                                                <div className="p-3 h-16 text-xs text-gray-400 font-mono">
+                                                    <div>Check Weight</div>
+                                                    <div>Add to Array</div>
+                                                </div>
+                                            </motion.div>
+
+                                            {/* Variable List - Bottom Left */}
                                             <motion.div
                                                 initial={{ opacity: 0, x: -20 }}
                                                 animate={{ opacity: 1, x: 0 }}
@@ -215,6 +245,33 @@ export default function InteractiveDemo() {
                     </motion.div>
                 </div>
             </div>
+
+            {/* Custom Scrollbar Styles */}
+            <style jsx global>{`
+                .custom-scrollbar::-webkit-scrollbar {
+                    width: 8px;
+                }
+
+                .custom-scrollbar::-webkit-scrollbar-track {
+                    background: #000;
+                    border-left: 1px solid #CCFF00;
+                }
+
+                .custom-scrollbar::-webkit-scrollbar-thumb {
+                    background: #CCFF00;
+                    border-radius: 4px;
+                }
+
+                .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+                    background: rgba(204, 255, 0, 0.8);
+                }
+
+                /* Firefox scrollbar */
+                .custom-scrollbar {
+                    scrollbar-width: thin;
+                    scrollbar-color: #CCFF00 #000;
+                }
+            `}</style>
         </section>
     )
 }
