@@ -23,8 +23,8 @@ export default function Home() {
       <PricingSection />
       <TechSpecs />
       <WaitlistSection />
-      <footer className="py-8 text-center text-foreground-secondary text-sm border-t border-white/5">
-        <p>© 2025 Synapsify. All rights reserved.</p>
+      <footer className="py-8 text-center text-foreground-secondary text-sm border-t-2 border-neon-lime bg-black">
+        <p className="font-mono">{'>'} © 2025 SYNAPSIFY. ALL RIGHTS RESERVED.</p>
       </footer>
     </main>
   )

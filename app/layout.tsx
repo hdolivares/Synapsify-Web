@@ -1,20 +1,20 @@
 import type { Metadata } from 'next'
-import { Inter, Space_Grotesk } from 'next/font/google'
+import { Orbitron, Inconsolata } from 'next/font/google'
 import './globals.css'
 import SmoothScroll from '@/components/SmoothScroll'
 import CustomCursor from '@/components/CustomCursor'
 import ScrollProgress from '@/components/ScrollProgress'
 import Preloader from '@/components/Preloader'
 
-const inter = Inter({
+const orbitron = Orbitron({
   subsets: ['latin'],
-  variable: '--font-inter',
+  variable: '--font-orbitron',
   display: 'swap',
 })
 
-const spaceGrotesk = Space_Grotesk({
+const inconsolata = Inconsolata({
   subsets: ['latin'],
-  variable: '--font-space-grotesk',
+  variable: '--font-inconsolata',
   display: 'swap',
 })
 
@@ -32,7 +32,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable}`}>
+    <html lang="en" className={`${orbitron.variable} ${inconsolata.variable}`}>
       <body className="antialiased">
         <SmoothScroll>
           <Preloader />

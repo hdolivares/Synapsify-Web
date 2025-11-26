@@ -34,13 +34,16 @@ export default function GameGateModal({ isOpen, onClose }: GameGateModalProps) {
         <AnimatePresence>
             {isOpen && (
                 <>
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        onClick={onClose}
-                        className="fixed inset-0 bg-black/90 backdrop-blur-md z-[100]"
-                    />
+                    {/* Only show background if not showing auth modal */}
+                    {!showAuth && (
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onClick={onClose}
+                            className="fixed inset-0 bg-black/90 backdrop-blur-md z-[100]"
+                        />
+                    )}
 
                     {/* Game Container */}
                     {!showAuth && (
@@ -91,7 +94,7 @@ export default function GameGateModal({ isOpen, onClose }: GameGateModalProps) {
     )
 
     if (!mounted) return null
-    
+
     // Use createPortal synchronously - react-dom is already imported at the top
     return createPortal(modalContent, document.body)
 }

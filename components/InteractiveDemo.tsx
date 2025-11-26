@@ -49,14 +49,21 @@ export default function InteractiveDemo() {
     }, [currentStep, isTyping, displayText])
 
     return (
-        <section id="demo" className="py-24 relative overflow-hidden">
-            <div className="container mx-auto px-4">
+        <section id="demo" className="py-24 relative overflow-hidden bg-black">
+            <div className="absolute inset-0 grid-pattern opacity-20" />
+
+            <div className="container mx-auto px-4 relative z-10">
                 <div className="text-center mb-16">
-                    <h2 className="text-4xl md:text-5xl font-bold mb-6">
-                        Watch it in <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent-purple to-accent-cyan">Action</span>
+                    <div className="inline-block mb-4">
+                        <span className="text-sm font-mono text-neon-magenta px-4 py-2 border border-neon-magenta bg-black/60 animate-pulse">
+                            [ LIVE DEMO ]
+                        </span>
+                    </div>
+                    <h2 className="text-4xl md:text-5xl font-black mb-6 uppercase">
+                        WATCH IT IN <span className="text-neon-magenta text-glow-magenta">ACTION</span>
                     </h2>
-                    <p className="text-xl text-foreground-secondary">
-                        From natural language to compiled code in seconds.
+                    <p className="text-xl text-foreground-secondary font-mono">
+                        {'>'} FROM NATURAL LANGUAGE TO COMPILED CODE IN SECONDS.
                     </p>
                 </div>
 
@@ -65,36 +72,36 @@ export default function InteractiveDemo() {
                         initial={{ opacity: 0, y: 40 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
-                        className="rounded-xl overflow-hidden border border-white/10 bg-[#1E1E1E] shadow-2xl"
+                        className="overflow-hidden border-2 border-neon-lime bg-black shadow-2xl neon-border"
                     >
-                        {/* Fake IDE Toolbar */}
-                        <div className="bg-[#252526] px-4 py-3 flex items-center justify-between border-b border-white/5">
+                        {/* Terminal Toolbar */}
+                        <div className="bg-black px-4 py-3 flex items-center justify-between border-b-2 border-neon-lime">
                             <div className="flex items-center gap-2">
                                 <div className="flex gap-2 mr-4">
-                                    <div className="w-3 h-3 rounded-full bg-red-500/80" />
-                                    <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
-                                    <div className="w-3 h-3 rounded-full bg-green-500/80" />
+                                    <div className="w-3 h-3 bg-neon-magenta" />
+                                    <div className="w-3 h-3 bg-neon-cyan" />
+                                    <div className="w-3 h-3 bg-neon-lime" />
                                 </div>
-                                <span className="text-sm text-gray-400 font-mono">Synapsify Editor - BP_InventorySystem</span>
+                                <span className="text-sm text-neon-lime font-mono font-bold">SYNAPSIFY_EDITOR - BP_InventorySystem</span>
                             </div>
                             <div className="flex items-center gap-4">
-                                <div className="flex items-center gap-2 px-3 py-1 rounded bg-[#333] text-xs text-gray-300">
-                                    <Play className="w-3 h-3 text-green-400" /> Compile
+                                <div className="flex items-center gap-2 px-3 py-1 bg-black border border-neon-lime text-xs text-neon-lime font-mono">
+                                    <Play className="w-3 h-3" /> COMPILE
                                 </div>
                             </div>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-3 h-[500px]">
                             {/* Chat Interface */}
-                            <div className="bg-[#1E1E1E] border-r border-white/5 p-4 flex flex-col">
+                            <div className="bg-black border-r-2 border-neon-lime p-4 flex flex-col">
                                 <div className="flex-1 space-y-4 overflow-y-auto">
                                     {currentStep > 0 && (
                                         <motion.div
                                             initial={{ opacity: 0, x: -20 }}
                                             animate={{ opacity: 1, x: 0 }}
-                                            className="bg-[#2D2D2D] p-3 rounded-lg rounded-tl-none max-w-[90%]"
+                                            className="bg-black border-2 border-neon-cyan p-3 max-w-[90%]"
                                         >
-                                            <p className="text-sm text-gray-300">{steps[0].text}</p>
+                                            <p className="text-sm text-neon-cyan font-mono">{steps[0].text}</p>
                                         </motion.div>
                                     )}
 
@@ -103,34 +110,34 @@ export default function InteractiveDemo() {
                                             key={idx}
                                             initial={{ opacity: 0, x: 20 }}
                                             animate={{ opacity: 1, x: 0 }}
-                                            className={`p-3 rounded-lg max-w-[90%] ml-auto ${step.type === 'success' ? 'bg-green-900/20 border border-green-500/30' :
-                                                step.type === 'done' ? 'bg-blue-900/20 border border-blue-500/30' :
-                                                    'bg-[#252526]'
+                                            className={`p-3 max-w-[90%] ml-auto border-2 ${step.type === 'success' ? 'bg-black border-neon-lime' :
+                                                    step.type === 'done' ? 'bg-black border-neon-cyan' :
+                                                        'bg-black border-foreground-secondary'
                                                 }`}
                                         >
                                             <div className="flex items-center gap-2">
-                                                {step.type === 'success' && <CheckCircle2 className="w-4 h-4 text-green-400" />}
-                                                {step.type === 'system' && <Zap className="w-4 h-4 text-yellow-400" />}
-                                                <p className="text-sm text-gray-300">{step.text}</p>
+                                                {step.type === 'success' && <CheckCircle2 className="w-4 h-4 text-neon-lime" />}
+                                                {step.type === 'system' && <Zap className="w-4 h-4 text-neon-cyan" />}
+                                                <p className="text-sm text-foreground font-mono">{step.text}</p>
                                             </div>
                                         </motion.div>
                                     ))}
                                 </div>
 
-                                <div className="mt-4 pt-4 border-t border-white/5">
-                                    <div className="bg-[#252526] p-3 rounded-lg flex items-center gap-2">
-                                        <Terminal className="w-4 h-4 text-gray-500" />
-                                        <span className="text-sm text-gray-300 font-mono">
+                                <div className="mt-4 pt-4 border-t-2 border-neon-lime">
+                                    <div className="bg-black border-2 border-neon-lime p-3 flex items-center gap-2">
+                                        <Terminal className="w-4 h-4 text-neon-lime" />
+                                        <span className="text-sm text-neon-lime font-mono">
                                             {currentStep === 0 ? displayText : ""}
-                                            <span className="animate-pulse">|</span>
+                                            <span className="animate-pulse">█</span>
                                         </span>
                                     </div>
                                 </div>
                             </div>
 
                             {/* Visual Node Graph */}
-                            <div className="col-span-2 bg-[#151515] relative overflow-hidden p-8">
-                                <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:20px_20px]" />
+                            <div className="col-span-2 bg-black relative overflow-hidden p-8">
+                                <div className="absolute inset-0 bg-[linear-gradient(rgba(204,255,0,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(204,255,0,0.05)_1px,transparent_1px)] bg-[size:20px_20px]" />
 
                                 <AnimatePresence>
                                     {currentStep > 2 && (
@@ -139,11 +146,11 @@ export default function InteractiveDemo() {
                                             <motion.div
                                                 initial={{ opacity: 0, scale: 0.8, x: 50, y: 50 }}
                                                 animate={{ opacity: 1, scale: 1, x: 50, y: 50 }}
-                                                className="absolute top-10 left-10 w-48 bg-[#2A2A2A] rounded border-t-4 border-red-500 shadow-lg"
+                                                className="absolute top-10 left-10 w-48 bg-black border-t-4 border-neon-magenta border-2"
                                             >
-                                                <div className="px-3 py-1 bg-white/5 flex justify-between items-center">
-                                                    <span className="text-xs font-bold text-white">Event BeginPlay</span>
-                                                    <Zap className="w-3 h-3 text-red-500" />
+                                                <div className="px-3 py-1 bg-black/80 border-b-2 border-neon-magenta flex justify-between items-center">
+                                                    <span className="text-xs font-bold text-neon-magenta font-mono">EVENT_BEGINPLAY</span>
+                                                    <Zap className="w-3 h-3 text-neon-magenta" />
                                                 </div>
                                                 <div className="p-3 h-20"></div>
                                             </motion.div>
@@ -153,11 +160,11 @@ export default function InteractiveDemo() {
                                                 initial={{ opacity: 0, scale: 0.8, x: 300, y: 50 }}
                                                 animate={{ opacity: 1, scale: 1, x: 300, y: 50 }}
                                                 transition={{ delay: 0.5 }}
-                                                className="absolute top-10 left-80 w-48 bg-[#2A2A2A] rounded border-t-4 border-blue-500 shadow-lg"
+                                                className="absolute top-10 left-80 w-48 bg-black border-t-4 border-neon-cyan border-2"
                                             >
-                                                <div className="px-3 py-1 bg-white/5 flex justify-between items-center">
-                                                    <span className="text-xs font-bold text-white">Init Inventory</span>
-                                                    <div className="w-3 h-3 rounded-full border border-white/50" />
+                                                <div className="px-3 py-1 bg-black/80 border-b-2 border-neon-cyan flex justify-between items-center">
+                                                    <span className="text-xs font-bold text-neon-cyan font-mono">INIT_INVENTORY</span>
+                                                    <div className="w-3 h-3 rounded-full border-2 border-neon-cyan" />
                                                 </div>
                                                 <div className="p-3 h-24"></div>
                                             </motion.div>
@@ -171,8 +178,8 @@ export default function InteractiveDemo() {
                                             >
                                                 <path
                                                     d="M 242 85 C 292 85, 292 85, 320 85"
-                                                    stroke="white"
-                                                    strokeWidth="2"
+                                                    stroke="#CCFF00"
+                                                    strokeWidth="3"
                                                     fill="none"
                                                 />
                                             </motion.svg>
@@ -182,21 +189,21 @@ export default function InteractiveDemo() {
                                                 initial={{ opacity: 0, x: -20 }}
                                                 animate={{ opacity: 1, x: 0 }}
                                                 transition={{ delay: 1.5 }}
-                                                className="absolute bottom-4 left-4 bg-[#252526] p-3 rounded border border-white/10"
+                                                className="absolute bottom-4 left-4 bg-black p-3 border-2 border-neon-lime"
                                             >
-                                                <div className="text-xs text-gray-400 mb-2">My Blueprint</div>
+                                                <div className="text-xs text-neon-lime mb-2 font-mono font-bold">MY_BLUEPRINT</div>
                                                 <div className="space-y-1">
-                                                    <div className="flex items-center gap-2 text-xs text-orange-400">
-                                                        <div className="w-2 h-2 rounded-full bg-orange-400" />
-                                                        CurrentWeight
+                                                    <div className="flex items-center gap-2 text-xs text-orange-400 font-mono">
+                                                        <div className="w-2 h-2 bg-orange-400" />
+                                                        CURRENT_WEIGHT
                                                     </div>
-                                                    <div className="flex items-center gap-2 text-xs text-orange-400">
-                                                        <div className="w-2 h-2 rounded-full bg-orange-400" />
-                                                        MaxWeight
+                                                    <div className="flex items-center gap-2 text-xs text-orange-400 font-mono">
+                                                        <div className="w-2 h-2 bg-orange-400" />
+                                                        MAX_WEIGHT
                                                     </div>
-                                                    <div className="flex items-center gap-2 text-xs text-blue-400">
-                                                        <div className="w-2 h-2 rounded bg-blue-400" />
-                                                        Items
+                                                    <div className="flex items-center gap-2 text-xs text-neon-cyan font-mono">
+                                                        <div className="w-2 h-2 bg-neon-cyan" />
+                                                        ITEMS
                                                     </div>
                                                 </div>
                                             </motion.div>

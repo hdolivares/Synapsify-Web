@@ -15,25 +15,27 @@ const config: Config = {
         foreground: 'var(--foreground)',
         'foreground-secondary': 'var(--foreground-secondary)',
         primary: {
-          DEFAULT: '#3B82F6',
-          glow: '#60A5FA',
+          DEFAULT: 'var(--primary)',
+          glow: 'var(--primary-glow)',
         },
+        'neon-lime': 'var(--neon-lime)',
+        'neon-magenta': 'var(--neon-magenta)',
+        'neon-cyan': 'var(--neon-cyan)',
         accent: {
-          purple: '#8B5CF6',
-          cyan: '#06b6d4',
+          magenta: 'var(--accent-magenta)',
+          cyan: 'var(--accent-cyan)',
         }
       },
       fontFamily: {
-        sans: ['var(--font-inter)'],
-        display: ['var(--font-space-grotesk)'],
+        sans: ['var(--font-inconsolata)', 'Courier New', 'monospace'],
+        display: ['var(--font-orbitron)', 'Impact', 'sans-serif'],
+        mono: ['var(--font-inconsolata)', 'Courier New', 'monospace'],
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-        'hero-glow': 'conic-gradient(from 180deg at 50% 50%, #2a8af6 0deg, #a853ba 180deg, #e92a67 360deg)',
       },
     },
   },
   plugins: [],
 }
 export default config
-

@@ -2,25 +2,44 @@
 
 import { motion } from 'framer-motion'
 import Link from 'next/link'
+import { useState, useEffect } from 'react'
 
 export default function Hero() {
+  const [text, setText] = useState('')
+  const fullText = 'CURSOR FOR GAME DEVELOPMENT'
+
+  useEffect(() => {
+    let index = 0
+    const timer = setInterval(() => {
+      if (index <= fullText.length) {
+        setText(fullText.slice(0, index))
+        index++
+      } else {
+        clearInterval(timer)
+      }
+    }, 100)
+
+    return () => clearInterval(timer)
+  }, [])
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
-      {/* Background Effects */}
-      <div className="absolute inset-0 z-0">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[600px] bg-primary-glow/20 rounded-full blur-[120px]" />
-        <div className="absolute bottom-0 right-0 w-[800px] h-[600px] bg-accent-purple/10 rounded-full blur-[100px]" />
-      </div>
+      {/* Grid Background */}
+      <div className="absolute inset-0 z-0 grid-pattern opacity-40" />
 
-      <div className="container mx-auto px-4 z-10 text-center">
+      {/* Geometric accent shapes */}
+      <div className="absolute top-20 left-10 w-64 h-64 border-2 border-neon-cyan opacity-20 rotate-45 animate-pulse-glow" />
+      <div className="absolute bottom-20 right-10 w-96 h-96 border-2 border-neon-magenta opacity-10 -rotate-12" />
+
+      <div className="container mx-auto px-4 z-10 text-center relative">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-panel mb-8 border-primary/30">
-            <span className="w-2 h-2 rounded-full bg-accent-cyan animate-pulse" />
-            <span className="text-sm font-medium text-accent-cyan tracking-wide">
+          <div className="inline-flex items-center gap-3 px-5 py-2 rounded border-2 border-neon-lime mb-8 bg-black/60 backdrop-blur-sm neon-border animate-flicker">
+            <span className="w-2 h-2 rounded-full bg-neon-lime animate-pulse" />
+            <span className="text-sm font-bold text-neon-lime tracking-widest">
               AI-NATIVE DEVELOPMENT FOR UNREAL
             </span>
           </div>
@@ -30,12 +49,11 @@ export default function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="text-6xl md:text-8xl font-bold mb-6 tracking-tight"
+          className="text-6xl md:text-8xl font-black mb-6 tracking-tight"
         >
-          Cursor for
-          <br />
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-accent-cyan to-accent-purple text-glow">
-            Game Development
+          <span className="block text-foreground mb-4">CURSOR FOR</span>
+          <span className="block text-neon-lime text-glow typing-cursor" style={{ fontFamily: 'var(--font-orbitron)' }}>
+            {text || 'GAME DEVELOPMENT'}
           </span>
         </motion.h1>
 
@@ -43,11 +61,11 @@ export default function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
-          className="text-xl md:text-2xl text-foreground-secondary max-w-3xl mx-auto mb-12 text-balance"
+          className="text-xl md:text-2xl text-foreground-secondary max-w-3xl mx-auto mb-12 text-balance font-mono"
         >
-          Build faster. Learn faster. Ship better.
+          {'>'} BUILD FASTER. LEARN FASTER. SHIP BETTER.
           <br />
-          Integrated AI that understands your Blueprints, C++, and project context.
+          {'>'} INTEGRATED AI THAT UNDERSTANDS YOUR BLUEPRINTS, C++, AND PROJECT CONTEXT.
         </motion.p>
 
         <motion.div
@@ -58,16 +76,41 @@ export default function Hero() {
         >
           <Link
             href="#waitlist"
-            className="px-8 py-4 rounded-lg bg-primary hover:bg-blue-600 text-white font-bold text-lg transition-all hover:scale-105 hover:shadow-[0_0_40px_rgba(59,130,246,0.5)]"
+            className="group relative px-8 py-4 bg-black border-2 border-neon-lime text-neon-lime font-bold text-lg transition-all hover:bg-neon-lime hover:text-black uppercase tracking-wider overflow-hidden"
           >
-            Join the Waitlist
+            <span className="relative z-10">Join the Waitlist</span>
+            <div className="absolute inset-0 bg-neon-lime transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
+            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity">
+              <div className="absolute inset-0 animate-pulse-glow" />
+            </div>
           </Link>
           <Link
             href="#demo"
-            className="px-8 py-4 rounded-lg glass-panel hover:bg-white/5 text-white font-medium text-lg transition-all border border-white/10 hover:border-white/20"
+            className="px-8 py-4 bg-transparent border-2 border-neon-cyan text-neon-cyan hover:bg-neon-cyan hover:text-black font-bold text-lg transition-all uppercase tracking-wider"
           >
             Watch Demo
           </Link>
+        </motion.div>
+
+        {/* Terminal-style decorative elements */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1, duration: 1 }}
+          className="mt-16 flex justify-center gap-8 text-xs font-mono text-foreground-secondary"
+        >
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 bg-neon-lime rounded-full animate-pulse" />
+            <span>SYSTEM: ONLINE</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 bg-neon-cyan rounded-full animate-pulse" />
+            <span>AI: READY</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 bg-neon-magenta rounded-full animate-pulse" />
+            <span>STATUS: ACTIVE</span>
+          </div>
         </motion.div>
       </div>
 
@@ -75,14 +118,14 @@ export default function Hero() {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 1, duration: 1 }}
+        transition={{ delay: 1.5, duration: 1 }}
         className="absolute bottom-10 left-1/2 -translate-x-1/2"
       >
-        <div className="w-6 h-10 rounded-full border-2 border-white/20 flex justify-center p-1">
+        <div className="w-6 h-10 rounded-full border-2 border-neon-lime flex justify-center p-1 neon-border">
           <motion.div
             animate={{ y: [0, 12, 0] }}
             transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
-            className="w-1 h-1 rounded-full bg-white"
+            className="w-1 h-1 rounded-full bg-neon-lime"
           />
         </div>
       </motion.div>
